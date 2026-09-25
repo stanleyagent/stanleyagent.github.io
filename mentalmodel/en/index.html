@@ -269,6 +269,17 @@
     }
     .pilot p { margin: 0 0 1.15rem; color: var(--muted); max-width: 42rem; }
 
+    .test-environment {
+      margin: 1.5rem 0 0;
+      padding: 1.1rem 1.2rem;
+      border: 1px solid rgba(61, 214, 198, 0.45);
+      border-left: 3px solid var(--teal);
+      border-radius: var(--radius);
+      background: rgba(61, 214, 198, 0.06);
+    }
+    .test-environment .section-label { margin: 0 0 0.45rem; color: var(--teal); }
+    .test-environment p:last-child { margin: 0; color: var(--muted); max-width: 58rem; }
+
     .faq {
       display: grid; gap: 0; border-top: 1px solid var(--line);
     }
@@ -734,6 +745,10 @@
             <p>When the rule doesn’t fit, the bot escalates instead of improvising.</p>
           </div>
         </div>
+        <aside class="test-environment" aria-label="Test environment">
+          <p class="section-label">Test environment</p>
+          <p>We run pipelines first in a test environment on sample data — not on production or real customer data.</p>
+        </aside>
       </section>
 
       <section id="dla-kogo" aria-labelledby="dla-kogo-title">
