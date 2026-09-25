@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>getStanley — bot deployment and maintenance for your business</title>
+  <link rel="alternate" hreflang="pl" href="https://stanleyagent.github.io/pl/" />
+  <link rel="alternate" hreflang="en" href="https://stanleyagent.github.io/en/" />
+  <link rel="alternate" hreflang="x-default" href="https://stanleyagent.github.io/pl/" />
+  <meta name="description" content="Deployment and maintenance of bot teams to your company's standard — in your apps, with Human in the Loop for irreversible actions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0c0c0b;
+      --bg-band: #10100e;
+      --bg-card: #161614;
+      --bg-card-2: #1c1c19;
+      --text: #f5f4f0;
+      --muted: #9a9890;
+      --muted-2: #6e6c64;
+      --yellow: #e8d98a;
+      --yellow-hover: #f0e6a8;
+      --teal: #3dd6c6;
+      --line: rgba(245, 244, 240, 0.1);
+      --line-strong: rgba(245, 244, 240, 0.16);
+      --radius: 6px;
+      --danger: #ff8a8a;
+      --ink: #0c0c0b;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1120px, calc(100% - 2.5rem)); margin: 0 auto; }
+
+    /* —— Nav —— */
+    .site-header {
+      position: sticky; top: 0; z-index: 40;
+      background: rgba(12, 12, 11, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .site-header .inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.95rem 0; gap: 1rem;
+    }
+    .brand {
+      font-weight: 600; letter-spacing: -0.03em; font-size: 1.05rem;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 0.5rem 1.25rem; flex-wrap: wrap;
+    }
+    .nav-links a.text-link {
+      color: var(--muted); font-size: 0.9rem; font-weight: 450;
+    }
+    .nav-links a.text-link:hover { color: var(--text); }
+    .btn-primary, button.btn-primary {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.7rem 1.1rem; border-radius: var(--radius); border: none; cursor: pointer;
+      background: var(--yellow); color: var(--ink); font-weight: 600;
+      text-decoration: none; font: inherit; font-size: 0.92rem;
+      transition: background 0.15s ease;
+    }
+    .btn-primary:hover, button.btn-primary:hover { background: var(--yellow-hover); }
+    .btn-primary:disabled { opacity: 0.6; cursor: wait; }
+    .btn-ghost {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.7rem 1.1rem; border-radius: var(--radius);
+      border: 1px solid var(--line-strong); text-decoration: none; color: var(--text);
+      background: transparent; font-size: 0.92rem; font-weight: 500;
+    }
+    .btn-ghost:hover { border-color: rgba(245,244,240,0.3); background: rgba(255,255,255,0.03); }
+    .nav-cta { padding: 0.55rem 0.95rem; font-size: 0.88rem; }
+
+    /* —— Hero —— */
+    .hero {
+      padding: 5.5rem 0 2rem;
+      display: grid; gap: 2.5rem 3.5rem;
+    }
+    @media (min-width: 900px) {
+      .hero {
+        grid-template-columns: 1.35fr 0.9fr;
+        align-items: end;
+        padding: 7rem 0 2.5rem;
+      }
+    }
+    .eyebrow {
+      display: inline-block; color: var(--muted); font-size: 0.82rem;
+      letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500;
+      margin-bottom: 1.35rem;
+    }
+    h1 {
+      font-weight: 300; letter-spacing: -0.045em;
+      font-size: clamp(2.6rem, 6.2vw, 4.75rem);
+      line-height: 1.05; margin: 0;
+      max-width: 14ch;
+    }
+    .hero-right { display: flex; flex-direction: column; gap: 1.5rem; padding-bottom: 0.35rem; }
+    .lede {
+      font-size: 1.05rem; color: var(--muted); margin: 0;
+      max-width: 32rem; line-height: 1.65;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; }
+
+    /* —— Mock UI —— */
+    .mock-wrap {
+      position: relative; margin: 2.5rem 0 0; padding-bottom: 1rem;
+    }
+    .mock-fade {
+      position: absolute; inset: auto 0 0 0; height: 42%;
+      background: linear-gradient(to top, var(--bg) 10%, transparent);
+      pointer-events: none; z-index: 2;
+    }
+    .mock {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.45);
+      filter: blur(0.2px);
+      opacity: 0.92;
+    }
+    .mock-bar {
+      display: flex; align-items: center; gap: 0.45rem;
+      padding: 0.75rem 1rem; border-bottom: 1px solid var(--line);
+      background: var(--bg-band);
+    }
+    .mock-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted-2); }
+    .mock-bar span { color: var(--muted-2); font-size: 0.78rem; margin-left: 0.5rem; }
+    .mock-body { padding: 1.15rem 1.2rem 1.6rem; display: grid; gap: 0.85rem; }
+    @media (min-width: 700px) {
+      .mock-body { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .mock-card {
+      background: var(--bg-card-2); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 1rem 1.05rem; min-height: 7.5rem;
+    }
+    .mock-card .role { font-size: 0.78rem; color: var(--teal); font-weight: 600; margin-bottom: 0.35rem; }
+    .mock-card h4 { margin: 0 0 0.5rem; font-size: 0.98rem; font-weight: 500; letter-spacing: -0.02em; }
+    .mock-status {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; color: var(--muted);
+    }
+    .mock-status i {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--teal);
+      display: inline-block;
+    }
+    .mock-status.idle i { background: var(--yellow); }
+    .mock-status.wait i { background: var(--muted-2); }
+    .mock-meta { margin-top: 0.65rem; font-size: 0.72rem; color: var(--muted-2); }
+
+    /* —— Sections —— */
+    section { padding: 4.5rem 0; }
+    .band { background: var(--bg-band); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .band .wrap { padding-top: 0; padding-bottom: 0; }
+    .section-label {
+      color: var(--muted-2); font-size: 0.78rem; letter-spacing: 0.08em;
+      text-transform: uppercase; font-weight: 500; margin: 0 0 0.85rem;
+    }
+    .section-title {
+      font-weight: 300; letter-spacing: -0.035em;
+      font-size: clamp(1.85rem, 3.4vw, 2.75rem);
+      margin: 0 0 0.65rem; line-height: 1.15; max-width: 22ch;
+    }
+    .section-sub { color: var(--muted); margin: 0 0 2.25rem; max-width: 38rem; font-size: 1.02rem; }
+
+    /* —— Stats —— */
+    .stats {
+      display: grid; gap: 1.5rem; padding: 3.5rem 0;
+    }
+    @media (min-width: 700px) {
+      .stats { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+    }
+    .stat {
+      border-left: 1px solid var(--line); padding-left: 1.15rem;
+    }
+    @media (max-width: 699px) {
+      .stat { border-left: none; border-top: 1px solid var(--line); padding: 1.1rem 0 0; }
+      .stats .stat:first-child { border-top: none; padding-top: 0; }
+    }
+    .stat .num {
+      font-size: clamp(1.7rem, 3vw, 2.35rem); font-weight: 300;
+      letter-spacing: -0.03em; margin: 0 0 0.35rem; color: var(--text);
+    }
+    .stat .label { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .stats-note {
+      grid-column: 1 / -1; margin: 0.5rem 0 0;
+      color: var(--muted-2); font-size: 0.8rem;
+    }
+
+    /* —— Pillars —— */
+    .pillars { display: grid; gap: 1rem; }
+    @media (min-width: 700px) { .pillars { grid-template-columns: repeat(3, 1fr); gap: 1.15rem; } }
+    .pillar {
+      border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 1.6rem 1.45rem; background: transparent;
+      min-height: 10rem;
+    }
+    .pillar .idx { color: var(--teal); font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+    .pillar h3 { margin: 0 0 0.55rem; font-size: 1.15rem; font-weight: 500; letter-spacing: -0.02em; }
+    .pillar p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+    /* —— Roles —— */
+    .grid.roles { display: grid; gap: 0; border-top: 1px solid var(--line); }
+    @media (min-width: 700px) {
+      .grid.roles { grid-template-columns: repeat(2, 1fr); }
+    }
+    .card {
+      background: transparent; border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line); padding: 1.75rem 1.5rem;
+    }
+    @media (min-width: 700px) {
+      .card:nth-child(2n) { border-right: none; }
+    }
+    @media (max-width: 699px) {
+      .card { border-right: none; }
+    }
+    .card .num { color: var(--teal); font-weight: 600; font-size: 0.82rem; margin-bottom: 0.65rem; letter-spacing: 0.04em; }
+    .card h3 { margin: 0 0 0.45rem; font-size: 1.2rem; font-weight: 500; letter-spacing: -0.02em; }
+    .card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+    /* —— Process —— */
+    .steps {
+      display: grid; gap: 0; border-top: 1px solid var(--line);
+      counter-reset: step;
+    }
+    @media (min-width: 900px) {
+      .steps { grid-template-columns: repeat(5, 1fr); }
+    }
+    @media (min-width: 560px) and (max-width: 899px) {
+      .steps { grid-template-columns: repeat(3, 1fr); }
+    }
+    .step {
+      padding: 1.5rem 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--line); border-right: 1px solid var(--line);
+    }
+    @media (min-width: 900px) {
+      .step:last-child { border-right: none; }
+    }
+    .step .num {
+      color: var(--yellow); font-size: 0.8rem; font-weight: 600;
+      margin-bottom: 0.85rem; letter-spacing: 0.04em;
+    }
+    .step h3 { margin: 0 0 0.4rem; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.02em; }
+    .step p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+    /* —— Checklist —— */
+    .checklist {
+      list-style: none; margin: 0; padding: 0;
+      display: grid; gap: 0; border-top: 1px solid var(--line);
+    }
+    .checklist li {
+      display: grid; grid-template-columns: 1.75rem 1fr; gap: 0.85rem;
+      padding: 1.15rem 0; border-bottom: 1px solid var(--line);
+      color: var(--text); font-size: 1.02rem; align-items: start;
+    }
+    .checklist .tick {
+      color: var(--yellow); font-weight: 500; line-height: 1.55;
+    }
+    .checklist span { color: var(--muted); }
+
+    /* —— Contact / form —— */
+    .cta-band {
+      padding: 4.5rem 0 5rem;
+    }
+    .cta-grid {
+      display: grid; gap: 2.5rem;
+    }
+    @media (min-width: 860px) {
+      .cta-grid { grid-template-columns: 0.85fr 1.15fr; gap: 3.5rem; align-items: start; }
+    }
+    .cta-band h2 {
+      margin: 0 0 0.75rem; font-weight: 300; letter-spacing: -0.035em;
+      font-size: clamp(1.85rem, 3.2vw, 2.6rem); line-height: 1.15;
+    }
+    .cta-band > .cta-grid > div > p { margin: 0; color: var(--muted); max-width: 28rem; }
+    form.lead-form {
+      display: grid; gap: 0.9rem;
+      border: 1px solid var(--line); border-radius: 8px;
+      padding: 1.5rem 1.4rem; background: var(--bg-card);
+    }
+    .field { display: grid; gap: 0.35rem; }
+    .field label { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 0.72rem 0.85rem; border-radius: var(--radius);
+      border: 1px solid var(--line); background: var(--bg);
+      color: var(--text); font: inherit;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: 2px solid rgba(232, 217, 138, 0.4); border-color: transparent;
+    }
+    .field textarea { min-height: 110px; resize: vertical; }
+    .field select option { background: var(--bg-card); }
+    .row2 { display: grid; gap: 0.85rem; }
+    @media (min-width: 560px) { .row2 { grid-template-columns: 1fr 1fr; } }
+    .hp { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; overflow: hidden; }
+    .form-status { margin: 0; font-size: 0.9rem; min-height: 1.3em; }
+    .form-status.ok { color: var(--teal); }
+    .form-status.err { color: var(--danger); }
+
+
+    /* —— Language switcher —— */
+    .lang-switch { position: relative; }
+    .lang-switch__btn {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.45rem 0.7rem; border-radius: var(--radius);
+      border: 1px solid var(--line); background: transparent;
+      color: var(--muted); font: inherit; font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .lang-switch__btn:hover,
+    .lang-switch__btn[aria-expanded="true"] {
+      color: var(--text); border-color: var(--line-strong); background: rgba(255,255,255,0.03);
+    }
+    .lang-switch__btn .chev {
+      display: inline-block; width: 0; height: 0;
+      border-left: 4px solid transparent; border-right: 4px solid transparent;
+      border-top: 5px solid currentColor; opacity: 0.7;
+    }
+    .lang-switch__menu {
+      position: absolute; right: 0; top: calc(100% + 0.35rem);
+      min-width: 9.5rem; margin: 0; padding: 0.35rem; list-style: none;
+      background: var(--bg-card); border: 1px solid var(--line);
+      border-radius: var(--radius); box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+      z-index: 50;
+    }
+    .lang-switch__menu[hidden] { display: none; }
+    .lang-switch__menu a {
+      display: block; padding: 0.5rem 0.7rem; border-radius: 4px;
+      color: var(--muted); font-size: 0.88rem; font-weight: 450;
+    }
+    .lang-switch__menu a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .lang-switch__menu a[aria-current="page"] {
+      color: var(--text); background: rgba(255,255,255,0.06); font-weight: 500;
+    }
+    /* —— Footer —— */
+    footer {
+      border-top: 1px solid var(--line); padding: 3rem 0 2.5rem;
+      color: var(--muted); font-size: 0.9rem;
+    }
+    .footer-word {
+      font-size: clamp(2.5rem, 10vw, 6.5rem); font-weight: 300;
+      letter-spacing: -0.05em; color: var(--text); opacity: 0.12;
+      line-height: 1; margin: 0 0 1.5rem; user-select: none;
+    }
+    .footer-row {
+      display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap inner">
+      <div class="brand">getStanley</div>
+      <nav class="nav-links" aria-label="Main">
+        <a class="text-link" href="#role">Roles</a>
+        <a class="text-link" href="#kontakt">Contact</a>
+        <div class="lang-switch" data-locale="en">
+          <button type="button" class="lang-switch__btn" id="lang-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-menu">
+            <span class="lang-switch__current">English</span>
+            <span class="chev" aria-hidden="true"></span>
+          </button>
+          <ul class="lang-switch__menu" id="lang-menu" role="listbox" hidden aria-label="Language"></ul>
+        </div>
+        <a class="btn-primary nav-cta" href="#kontakt" data-lead-type="bot_team">Share an idea or need</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="hero">
+        <div>
+          <div class="eyebrow">Bot deployment and maintenance for your business</div>
+          <h1>Across companies worldwide, bots are taking over repetitive work. Important decisions and the direction of action stay with people.</h1>
+        </div>
+        <div class="hero-right">
+          <p class="lede">getStanley is a service for deploying and maintaining bot teams to your company's standard — they work in your applications, they don't reinvent everything, but they can meaningfully change how your company works. Scope and rules are set upfront; customer contact, payments, and other irreversible actions always require human approval.</p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="#kontakt" data-lead-type="bot_team">Share an idea or need</a>
+            <a class="btn-ghost" href="#kontakt" data-lead-type="workflow_call">Book a call about implementation options</a>
+          </div>
+        </div>
+      </section>
+
+      <div class="mock-wrap" aria-hidden="true">
+        <div class="mock">
+          <div class="mock-bar">
+            <span class="mock-dot"></span>
+            <span class="mock-dot"></span>
+            <span class="mock-dot"></span>
+            <span>getstanley / team / live</span>
+          </div>
+          <div class="mock-body">
+            <div class="mock-card">
+              <div class="role">01 · Role</div>
+              <h4>Web designer</h4>
+              <div class="mock-status"><i></i> In progress — layout</div>
+              <div class="mock-meta">Last check-in · 12 min</div>
+            </div>
+            <div class="mock-card">
+              <div class="role">03 · Role</div>
+              <h4>Software PM</h4>
+              <div class="mock-status idle"><i></i> Waiting for approval</div>
+              <div class="mock-meta">Ticket flow · 3 open</div>
+            </div>
+            <div class="mock-card">
+              <div class="role">04 · Role</div>
+              <h4>Tester</h4>
+              <div class="mock-status wait"><i></i> Escalation to you</div>
+              <div class="mock-meta">Regression · report ready</div>
+            </div>
+          </div>
+        </div>
+        <div class="mock-fade"></div>
+      </div>
+    </div>
+
+    <section class="band" aria-labelledby="stats-heading">
+      <div class="wrap">
+        <p class="section-label" id="stats-heading">Offer facts — not ROI promises</p>
+        <div class="stats">
+          <div class="stat">
+            <p class="num">~3 dni</p>
+            <p class="label">to launch a typical start</p>
+          </div>
+          <div class="stat">
+            <p class="num">2–3 boty</p>
+            <p class="label">typical team for one workflow</p>
+          </div>
+          <div class="stat">
+            <p class="num">4 role</p>
+            <p class="label">in the current catalog</p>
+          </div>
+          <div class="stat">
+            <p class="num">HitL</p>
+            <p class="label">Human in the Loop when there's risk</p>
+          </div>
+          <p class="stats-note">Figures from the getStanley offer — scope and pace are set after we discuss your workflow.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <section>
+        <p class="section-label">Who it's for</p>
+        <h2 class="section-title">For owners and operations</h2>
+        <p class="section-sub">The offer is aimed at business owners and people responsible for operations who want to systematize processes that consume team time, scale activities, or optimize team cost — many tasks in a company can be handled without handing bots strategic decisions or high-risk actions.</p>
+        <p class="section-sub">Typical starting team: 2–3 bots for one workflow; launch in about 3 days.</p>
+      </section>
+
+      <section>
+        <p class="section-label">Control</p>
+        <h2 class="section-title">How we ensure control</h2>
+        <p class="section-sub">A deployment model based on rules, human approvals (Human in the Loop), and escalation when there is uncertainty or risk.</p>
+        <div class="pillars">
+          <div class="pillar">
+            <div class="idx">01</div>
+            <h3>Clear rules</h3>
+            <p>Every bot has a defined role, permission scope, and operating rules — no opaque “black box.”</p>
+          </div>
+          <div class="pillar">
+            <div class="idx">02</div>
+            <h3>Human control</h3>
+            <p>Outbound messages, payments, and other irreversible actions require your attention and approval.</p>
+          </div>
+          <div class="pillar">
+            <div class="idx">03</div>
+            <h3>Escalation</h3>
+            <p>When a bot lacks sufficient confidence, it hands the matter to a human. In the feedback loop it learns from your decisions so it can take even better actions on its own.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="role">
+        <p class="section-label">Catalog</p>
+        <h2 class="section-title">Available bot roles</h2>
+        <p class="section-sub">Current role catalog — expanded gradually.</p>
+        <div class="grid roles">
+          <article class="card">
+            <div class="num">01</div>
+            <h3>Web designer</h3>
+            <p>Page layouts, interface structure, and layout work.</p>
+          </article>
+          <article class="card">
+            <div class="num">02</div>
+            <h3>Graphic designer</h3>
+            <p>Visual materials, graphic assets, and brand consistency.</p>
+          </article>
+          <article class="card">
+            <div class="num">03</div>
+            <h3>Software development PM</h3>
+            <p>Work planning, ticket flow, statuses, and developer team coordination.</p>
+          </article>
+          <article class="card">
+            <div class="num">04</div>
+            <h3>Tester</h3>
+            <p>Testing, regression, and bug reporting against clearly defined done criteria.</p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <p class="section-label">Process</p>
+        <h2 class="section-title">How collaboration works</h2>
+        <p class="section-sub">From agreeing scope to handing over a working workflow — with escalation and quality oversight.</p>
+        <div class="steps">
+          <article class="step"><div class="num">01</div><h3>Scope</h3><p>Agree which processes to take over.</p></article>
+          <article class="step"><div class="num">02</div><h3>Roles</h3><p>Define small, named bots.</p></article>
+          <article class="step"><div class="num">03</div><h3>Training</h3><p>Fit to your working standard.</p></article>
+          <article class="step"><div class="num">04</div><h3>Deployment</h3><p>Integrate with your company's tools.</p></article>
+          <article class="step"><div class="num">05</div><h3>Handover</h3><p>Escalation, approvals, and quality oversight.</p></article>
+        </div>
+      </section>
+
+      <section>
+        <p class="section-label">Before kickoff</p>
+        <h2 class="section-title">What you settle before kickoff</h2>
+        <p class="section-sub">No ROI promises — a concrete scope before a bot runs in your tools.</p>
+        <ul class="checklist">
+          <li><span class="tick">✓</span><span>Map of one workflow and a list of decisions that stay on your side</span></li>
+          <li><span class="tick">✓</span><span>Named bot roles with scope and operating rules</span></li>
+          <li><span class="tick">✓</span><span>Escalation points: when the bot asks instead of acting on guesses</span></li>
+          <li><span class="tick">✓</span><span>Integration plan with the tools you already use</span></li>
+          <li><span class="tick">✓</span><span>Done criteria and quality check-ins after handover</span></li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="band cta-band" id="kontakt">
+      <div class="wrap">
+        <div class="cta-grid">
+          <div>
+            <p class="section-label">Contact</p>
+            <h2>Discuss the first workflow</h2>
+            <p>Fill in the form. Your submission goes into the getStanley sales pipeline — we reply within 1 hour (7 days a week, 24 hours). Only when a decision requires a human on the getStanley team side may response time be longer. The getStanley team works Monday–Friday, 8:00–17:00 (Europe/Warsaw).</p>
+          </div>
+          <form class="lead-form" id="lead-form" novalidate>
+            <div class="field">
+              <label for="lead_type">Purpose of inquiry</label>
+              <select id="lead_type" name="lead_type" required>
+                <option value="bot_team">Share an idea or need</option>
+                <option value="workflow_call">Book a call about implementation options</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="name">Full name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="email">Work email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" />
+            </div>
+            <div class="field">
+              <label for="company">Company / organization</label>
+              <input id="company" name="company" type="text" autocomplete="organization" required maxlength="160" />
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="phone">Phone <span style="opacity:.7">(optional)</span></label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40" />
+              </div>
+              <div class="field">
+                <label for="website">Website <span style="opacity:.7">(optional)</span></label>
+                <input id="website" name="website" type="url" autocomplete="url" maxlength="200" placeholder="https://" />
+              </div>
+            </div>
+            <div class="field" id="preferred_time_wrap" hidden>
+              <label for="preferred_time">When should we talk? <span style="opacity:.7">(optional)</span></label>
+              <input id="preferred_time" name="preferred_time" type="text" maxlength="160" placeholder="e.g. Tue–Thu after 14:00" />
+            </div>
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" required maxlength="2000" placeholder="What idea or need would you like to share?"></textarea>
+            </div>
+            <input class="hp" type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <button class="btn-primary" type="submit" id="lead-submit">Send inquiry</button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p class="footer-word" aria-hidden="true">getStanley</p>
+      <div class="footer-row">
+        <div>© <span id="y"></span> getStanley</div>
+        <div>Leads: form above</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    // LOCALES — add new languages here
+    const LOCALES = [
+      { code: "pl", label: "Polski", path: "/pl/" },
+      { code: "en", label: "English", path: "/en/" }
+    ];
+
+    (function initLangSwitch() {
+      const root = document.querySelector(".lang-switch");
+      if (!root) return;
+      const current = root.getAttribute("data-locale") || "pl";
+      const btn = document.getElementById("lang-btn");
+      const menu = document.getElementById("lang-menu");
+      const currentLabel = root.querySelector(".lang-switch__current");
+      const cur = LOCALES.find(function (l) { return l.code === current; }) || LOCALES[0];
+      if (currentLabel) currentLabel.textContent = cur.label;
+
+      menu.innerHTML = "";
+      LOCALES.forEach(function (loc) {
+        const li = document.createElement("li");
+        li.setAttribute("role", "option");
+        const a = document.createElement("a");
+        a.href = loc.path;
+        a.textContent = loc.label;
+        a.setAttribute("role", "option");
+        if (loc.code === current) a.setAttribute("aria-current", "page");
+        a.addEventListener("click", function (ev) {
+          ev.preventDefault();
+          const hash = window.location.hash || "";
+          window.location.assign(loc.path + hash);
+        });
+        li.appendChild(a);
+        menu.appendChild(li);
+      });
+
+      function closeMenu() {
+        menu.hidden = true;
+        btn.setAttribute("aria-expanded", "false");
+      }
+      function openMenu() {
+        menu.hidden = false;
+        btn.setAttribute("aria-expanded", "true");
+      }
+      btn.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        if (menu.hidden) openMenu(); else closeMenu();
+      });
+      document.addEventListener("click", function () { closeMenu(); });
+      document.addEventListener("keydown", function (ev) {
+        if (ev.key === "Escape") closeMenu();
+      });
+      menu.addEventListener("click", function (ev) { ev.stopPropagation(); });
+    })();
+
+    const LEAD_ENDPOINT = "https://formsubmit.co/ajax/getstanley@agentmail.to";
+
+    const form = document.getElementById("lead-form");
+    const statusEl = document.getElementById("form-status");
+    const submitBtn = document.getElementById("lead-submit");
+    const typeSelect = document.getElementById("lead_type");
+    const messageEl = document.getElementById("message");
+    const preferredWrap = document.getElementById("preferred_time_wrap");
+
+    const placeholders = {
+      bot_team: "What idea or need would you like to share?",
+      workflow_call: "What implementation options would you like to discuss?"
+    };
+
+    function syncLeadTypeUI() {
+      const t = typeSelect.value;
+      messageEl.placeholder = placeholders[t] || placeholders.bot_team;
+      preferredWrap.hidden = t !== "workflow_call";
+      if (t !== "workflow_call") form.preferred_time.value = "";
+    }
+
+    typeSelect.addEventListener("change", syncLeadTypeUI);
+    syncLeadTypeUI();
+
+    document.querySelectorAll("[data-lead-type]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        const t = el.getAttribute("data-lead-type");
+        if (t) {
+          typeSelect.value = t;
+          syncLeadTypeUI();
+        }
+      });
+    });
+
+    form.addEventListener("submit", async function (ev) {
+      ev.preventDefault();
+      statusEl.textContent = "";
+      statusEl.className = "form-status";
+
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const company = form.company.value.trim();
+      const message = form.message.value.trim();
+      const leadType = form.lead_type.value;
+
+      if (!name || !email || !company || !message) {
+        statusEl.textContent = "Please fill in name, email, company, and message.";
+        statusEl.classList.add("err");
+        return;
+      }
+
+      if (form.hp.value) {
+        statusEl.textContent = "Thank you — your inquiry reached getStanley. We will reply within 1 hour (subject to decisions on our team's side).";
+        statusEl.classList.add("ok");
+        form.reset();
+        syncLeadTypeUI();
+        return;
+      }
+
+      const phone = form.phone.value.trim();
+      const website = form.website.value.trim();
+      const preferredTime = leadType === "workflow_call" ? form.preferred_time.value.trim() : "";
+      const pageUrl = window.location.href.split("#")[0];
+      const submittedAt = new Date().toISOString();
+      const ctaLabel = leadType === "bot_team" ? "Share an idea or need" : "Book a call about implementation options";
+      const bodyLines = [
+        "Name: " + name,
+        "Email: " + email,
+        "Phone: " + phone,
+        "Company: " + company,
+        "CTA: " + ctaLabel,
+        "Message: " + message,
+        preferredTime ? ("Preferred call time: " + preferredTime) : "",
+        website ? ("Lead website: " + website) : "",
+        "Page: " + pageUrl,
+        "Time: " + submittedAt,
+        "lead_type: " + leadType,
+        "source: landing_getstanley"
+      ].filter(Boolean).join("\n");
+
+      const payload = {
+        name: name,
+        email: email,
+        company: company,
+        phone: phone,
+        website: website,
+        preferred_time: preferredTime,
+        message: bodyLines,
+        _subject: "[Lead] " + ctaLabel + " — " + name + " / " + company,
+        _replyto: email,
+        _template: "box",
+        _captcha: "false",
+        _autoresponse: "Thank you — getStanley received your inquiry. We reply within 1 hour (24/7); when a decision requires a human on our side, response time may be longer. The team works Mon–Fri 8:00–17:00 (Europe/Warsaw). Offer: https://stanleyagent.github.io/en/"
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending…";
+
+      try {
+        const res = await fetch(LEAD_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+        var data = null;
+        try { data = await res.json(); } catch (_) {}
+        if (!res.ok || (data && data.success === "false")) throw new Error("bad status");
+        form.reset();
+        syncLeadTypeUI();
+        statusEl.textContent = "Thank you — your inquiry reached getStanley. We will reply within 1 hour (subject to decisions on our team's side).";
+        statusEl.classList.add("ok");
+      } catch (err) {
+        statusEl.textContent = "Could not send. Please try again in a moment.";
+        statusEl.classList.add("err");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send inquiry";
+      }
+    });
+  </script>
+</body>
+</html>

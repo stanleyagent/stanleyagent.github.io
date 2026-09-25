@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>getStanley — wdrożenie i utrzymanie botów dla Twojego biznesu</title>
+  <link rel="alternate" hreflang="pl" href="https://stanleyagent.github.io/pl/" />
+  <link rel="alternate" hreflang="en" href="https://stanleyagent.github.io/en/" />
+  <link rel="alternate" hreflang="x-default" href="https://stanleyagent.github.io/pl/" />
+  <meta name="description" content="Wdrożenie i utrzymanie zespołów botów pod standard Twojej firmy — w Twoich aplikacjach, z Human in the Loop przy działaniach nieodwracalnych." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0c0c0b;
+      --bg-band: #10100e;
+      --bg-card: #161614;
+      --bg-card-2: #1c1c19;
+      --text: #f5f4f0;
+      --muted: #9a9890;
+      --muted-2: #6e6c64;
+      --yellow: #e8d98a;
+      --yellow-hover: #f0e6a8;
+      --teal: #3dd6c6;
+      --line: rgba(245, 244, 240, 0.1);
+      --line-strong: rgba(245, 244, 240, 0.16);
+      --radius: 6px;
+      --danger: #ff8a8a;
+      --ink: #0c0c0b;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1120px, calc(100% - 2.5rem)); margin: 0 auto; }
+
+    /* —— Nav —— */
+    .site-header {
+      position: sticky; top: 0; z-index: 40;
+      background: rgba(12, 12, 11, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .site-header .inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.95rem 0; gap: 1rem;
+    }
+    .brand {
+      font-weight: 600; letter-spacing: -0.03em; font-size: 1.05rem;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 0.5rem 1.25rem; flex-wrap: wrap;
+    }
+    .nav-links a.text-link {
+      color: var(--muted); font-size: 0.9rem; font-weight: 450;
+    }
+    .nav-links a.text-link:hover { color: var(--text); }
+    .btn-primary, button.btn-primary {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.7rem 1.1rem; border-radius: var(--radius); border: none; cursor: pointer;
+      background: var(--yellow); color: var(--ink); font-weight: 600;
+      text-decoration: none; font: inherit; font-size: 0.92rem;
+      transition: background 0.15s ease;
+    }
+    .btn-primary:hover, button.btn-primary:hover { background: var(--yellow-hover); }
+    .btn-primary:disabled { opacity: 0.6; cursor: wait; }
+    .btn-ghost {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.7rem 1.1rem; border-radius: var(--radius);
+      border: 1px solid var(--line-strong); text-decoration: none; color: var(--text);
+      background: transparent; font-size: 0.92rem; font-weight: 500;
+    }
+    .btn-ghost:hover { border-color: rgba(245,244,240,0.3); background: rgba(255,255,255,0.03); }
+    .nav-cta { padding: 0.55rem 0.95rem; font-size: 0.88rem; }
+
+    /* —— Hero —— */
+    .hero {
+      padding: 5.5rem 0 2rem;
+      display: grid; gap: 2.5rem 3.5rem;
+    }
+    @media (min-width: 900px) {
+      .hero {
+        grid-template-columns: 1.35fr 0.9fr;
+        align-items: end;
+        padding: 7rem 0 2.5rem;
+      }
+    }
+    .eyebrow {
+      display: inline-block; color: var(--muted); font-size: 0.82rem;
+      letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500;
+      margin-bottom: 1.35rem;
+    }
+    h1 {
+      font-weight: 300; letter-spacing: -0.045em;
+      font-size: clamp(2.6rem, 6.2vw, 4.75rem);
+      line-height: 1.05; margin: 0;
+      max-width: 14ch;
+    }
+    .hero-right { display: flex; flex-direction: column; gap: 1.5rem; padding-bottom: 0.35rem; }
+    .lede {
+      font-size: 1.05rem; color: var(--muted); margin: 0;
+      max-width: 32rem; line-height: 1.65;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; }
+
+    /* —— Mock UI —— */
+    .mock-wrap {
+      position: relative; margin: 2.5rem 0 0; padding-bottom: 1rem;
+    }
+    .mock-fade {
+      position: absolute; inset: auto 0 0 0; height: 42%;
+      background: linear-gradient(to top, var(--bg) 10%, transparent);
+      pointer-events: none; z-index: 2;
+    }
+    .mock {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.45);
+      filter: blur(0.2px);
+      opacity: 0.92;
+    }
+    .mock-bar {
+      display: flex; align-items: center; gap: 0.45rem;
+      padding: 0.75rem 1rem; border-bottom: 1px solid var(--line);
+      background: var(--bg-band);
+    }
+    .mock-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted-2); }
+    .mock-bar span { color: var(--muted-2); font-size: 0.78rem; margin-left: 0.5rem; }
+    .mock-body { padding: 1.15rem 1.2rem 1.6rem; display: grid; gap: 0.85rem; }
+    @media (min-width: 700px) {
+      .mock-body { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .mock-card {
+      background: var(--bg-card-2); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 1rem 1.05rem; min-height: 7.5rem;
+    }
+    .mock-card .role { font-size: 0.78rem; color: var(--teal); font-weight: 600; margin-bottom: 0.35rem; }
+    .mock-card h4 { margin: 0 0 0.5rem; font-size: 0.98rem; font-weight: 500; letter-spacing: -0.02em; }
+    .mock-status {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; color: var(--muted);
+    }
+    .mock-status i {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--teal);
+      display: inline-block;
+    }
+    .mock-status.idle i { background: var(--yellow); }
+    .mock-status.wait i { background: var(--muted-2); }
+    .mock-meta { margin-top: 0.65rem; font-size: 0.72rem; color: var(--muted-2); }
+
+    /* —— Sections —— */
+    section { padding: 4.5rem 0; }
+    .band { background: var(--bg-band); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .band .wrap { padding-top: 0; padding-bottom: 0; }
+    .section-label {
+      color: var(--muted-2); font-size: 0.78rem; letter-spacing: 0.08em;
+      text-transform: uppercase; font-weight: 500; margin: 0 0 0.85rem;
+    }
+    .section-title {
+      font-weight: 300; letter-spacing: -0.035em;
+      font-size: clamp(1.85rem, 3.4vw, 2.75rem);
+      margin: 0 0 0.65rem; line-height: 1.15; max-width: 22ch;
+    }
+    .section-sub { color: var(--muted); margin: 0 0 2.25rem; max-width: 38rem; font-size: 1.02rem; }
+
+    /* —— Stats —— */
+    .stats {
+      display: grid; gap: 1.5rem; padding: 3.5rem 0;
+    }
+    @media (min-width: 700px) {
+      .stats { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+    }
+    .stat {
+      border-left: 1px solid var(--line); padding-left: 1.15rem;
+    }
+    @media (max-width: 699px) {
+      .stat { border-left: none; border-top: 1px solid var(--line); padding: 1.1rem 0 0; }
+      .stats .stat:first-child { border-top: none; padding-top: 0; }
+    }
+    .stat .num {
+      font-size: clamp(1.7rem, 3vw, 2.35rem); font-weight: 300;
+      letter-spacing: -0.03em; margin: 0 0 0.35rem; color: var(--text);
+    }
+    .stat .label { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .stats-note {
+      grid-column: 1 / -1; margin: 0.5rem 0 0;
+      color: var(--muted-2); font-size: 0.8rem;
+    }
+
+    /* —— Pillars —— */
+    .pillars { display: grid; gap: 1rem; }
+    @media (min-width: 700px) { .pillars { grid-template-columns: repeat(3, 1fr); gap: 1.15rem; } }
+    .pillar {
+      border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 1.6rem 1.45rem; background: transparent;
+      min-height: 10rem;
+    }
+    .pillar .idx { color: var(--teal); font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+    .pillar h3 { margin: 0 0 0.55rem; font-size: 1.15rem; font-weight: 500; letter-spacing: -0.02em; }
+    .pillar p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+    /* —— Roles —— */
+    .grid.roles { display: grid; gap: 0; border-top: 1px solid var(--line); }
+    @media (min-width: 700px) {
+      .grid.roles { grid-template-columns: repeat(2, 1fr); }
+    }
+    .card {
+      background: transparent; border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line); padding: 1.75rem 1.5rem;
+    }
+    @media (min-width: 700px) {
+      .card:nth-child(2n) { border-right: none; }
+    }
+    @media (max-width: 699px) {
+      .card { border-right: none; }
+    }
+    .card .num { color: var(--teal); font-weight: 600; font-size: 0.82rem; margin-bottom: 0.65rem; letter-spacing: 0.04em; }
+    .card h3 { margin: 0 0 0.45rem; font-size: 1.2rem; font-weight: 500; letter-spacing: -0.02em; }
+    .card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+    /* —— Process —— */
+    .steps {
+      display: grid; gap: 0; border-top: 1px solid var(--line);
+      counter-reset: step;
+    }
+    @media (min-width: 900px) {
+      .steps { grid-template-columns: repeat(5, 1fr); }
+    }
+    @media (min-width: 560px) and (max-width: 899px) {
+      .steps { grid-template-columns: repeat(3, 1fr); }
+    }
+    .step {
+      padding: 1.5rem 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--line); border-right: 1px solid var(--line);
+    }
+    @media (min-width: 900px) {
+      .step:last-child { border-right: none; }
+    }
+    .step .num {
+      color: var(--yellow); font-size: 0.8rem; font-weight: 600;
+      margin-bottom: 0.85rem; letter-spacing: 0.04em;
+    }
+    .step h3 { margin: 0 0 0.4rem; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.02em; }
+    .step p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+    /* —— Checklist —— */
+    .checklist {
+      list-style: none; margin: 0; padding: 0;
+      display: grid; gap: 0; border-top: 1px solid var(--line);
+    }
+    .checklist li {
+      display: grid; grid-template-columns: 1.75rem 1fr; gap: 0.85rem;
+      padding: 1.15rem 0; border-bottom: 1px solid var(--line);
+      color: var(--text); font-size: 1.02rem; align-items: start;
+    }
+    .checklist .tick {
+      color: var(--yellow); font-weight: 500; line-height: 1.55;
+    }
+    .checklist span { color: var(--muted); }
+
+    /* —— Contact / form —— */
+    .cta-band {
+      padding: 4.5rem 0 5rem;
+    }
+    .cta-grid {
+      display: grid; gap: 2.5rem;
+    }
+    @media (min-width: 860px) {
+      .cta-grid { grid-template-columns: 0.85fr 1.15fr; gap: 3.5rem; align-items: start; }
+    }
+    .cta-band h2 {
+      margin: 0 0 0.75rem; font-weight: 300; letter-spacing: -0.035em;
+      font-size: clamp(1.85rem, 3.2vw, 2.6rem); line-height: 1.15;
+    }
+    .cta-band > .cta-grid > div > p { margin: 0; color: var(--muted); max-width: 28rem; }
+    form.lead-form {
+      display: grid; gap: 0.9rem;
+      border: 1px solid var(--line); border-radius: 8px;
+      padding: 1.5rem 1.4rem; background: var(--bg-card);
+    }
+    .field { display: grid; gap: 0.35rem; }
+    .field label { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 0.72rem 0.85rem; border-radius: var(--radius);
+      border: 1px solid var(--line); background: var(--bg);
+      color: var(--text); font: inherit;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: 2px solid rgba(232, 217, 138, 0.4); border-color: transparent;
+    }
+    .field textarea { min-height: 110px; resize: vertical; }
+    .field select option { background: var(--bg-card); }
+    .row2 { display: grid; gap: 0.85rem; }
+    @media (min-width: 560px) { .row2 { grid-template-columns: 1fr 1fr; } }
+    .hp { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; overflow: hidden; }
+    .form-status { margin: 0; font-size: 0.9rem; min-height: 1.3em; }
+    .form-status.ok { color: var(--teal); }
+    .form-status.err { color: var(--danger); }
+
+
+    /* —— Language switcher —— */
+    .lang-switch { position: relative; }
+    .lang-switch__btn {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.45rem 0.7rem; border-radius: var(--radius);
+      border: 1px solid var(--line); background: transparent;
+      color: var(--muted); font: inherit; font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .lang-switch__btn:hover,
+    .lang-switch__btn[aria-expanded="true"] {
+      color: var(--text); border-color: var(--line-strong); background: rgba(255,255,255,0.03);
+    }
+    .lang-switch__btn .chev {
+      display: inline-block; width: 0; height: 0;
+      border-left: 4px solid transparent; border-right: 4px solid transparent;
+      border-top: 5px solid currentColor; opacity: 0.7;
+    }
+    .lang-switch__menu {
+      position: absolute; right: 0; top: calc(100% + 0.35rem);
+      min-width: 9.5rem; margin: 0; padding: 0.35rem; list-style: none;
+      background: var(--bg-card); border: 1px solid var(--line);
+      border-radius: var(--radius); box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+      z-index: 50;
+    }
+    .lang-switch__menu[hidden] { display: none; }
+    .lang-switch__menu a {
+      display: block; padding: 0.5rem 0.7rem; border-radius: 4px;
+      color: var(--muted); font-size: 0.88rem; font-weight: 450;
+    }
+    .lang-switch__menu a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .lang-switch__menu a[aria-current="page"] {
+      color: var(--text); background: rgba(255,255,255,0.06); font-weight: 500;
+    }
+    /* —— Footer —— */
+    footer {
+      border-top: 1px solid var(--line); padding: 3rem 0 2.5rem;
+      color: var(--muted); font-size: 0.9rem;
+    }
+    .footer-word {
+      font-size: clamp(2.5rem, 10vw, 6.5rem); font-weight: 300;
+      letter-spacing: -0.05em; color: var(--text); opacity: 0.12;
+      line-height: 1; margin: 0 0 1.5rem; user-select: none;
+    }
+    .footer-row {
+      display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap inner">
+      <div class="brand">getStanley</div>
+      <nav class="nav-links" aria-label="Główne">
+        <a class="text-link" href="#role">Role</a>
+        <a class="text-link" href="#kontakt">Kontakt</a>
+        <div class="lang-switch" data-locale="pl">
+          <button type="button" class="lang-switch__btn" id="lang-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-menu">
+            <span class="lang-switch__current">Polski</span>
+            <span class="chev" aria-hidden="true"></span>
+          </button>
+          <ul class="lang-switch__menu" id="lang-menu" role="listbox" hidden aria-label="Język"></ul>
+        </div>
+        <a class="btn-primary nav-cta" href="#kontakt" data-lead-type="bot_team">Zgłoś pomysł lub potrzebę</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="hero">
+        <div>
+          <div class="eyebrow">Wdrożenie i utrzymanie botów dla Twojego biznesu</div>
+          <h1>Powtarzalną pracę w firmach na całym świecie przejmują boty. Ważne decyzje i kierunek działania są podejmowane przez ludzi.</h1>
+        </div>
+        <div class="hero-right">
+          <p class="lede">getStanley to usługa wdrożenia i utrzymania zespołów botów pod standard Twojej firmy — pracują w Twoich aplikacjach, niczego nie rewolucjonizują, ale mogą znacznie zmienić sposób pracy Twojej firmy. Zakres i reguły są z góry ustalone; kontakt z klientami, płatności i inne działania nieodwracalne zawsze wymagają zatwierdzenia człowieka.</p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="#kontakt" data-lead-type="bot_team">Zgłoś pomysł lub potrzebę</a>
+            <a class="btn-ghost" href="#kontakt" data-lead-type="workflow_call">Umów rozmowę o możliwościach wdrożenia</a>
+          </div>
+        </div>
+      </section>
+
+      <div class="mock-wrap" aria-hidden="true">
+        <div class="mock">
+          <div class="mock-bar">
+            <span class="mock-dot"></span>
+            <span class="mock-dot"></span>
+            <span class="mock-dot"></span>
+            <span>getstanley / zespół / live</span>
+          </div>
+          <div class="mock-body">
+            <div class="mock-card">
+              <div class="role">01 · Rola</div>
+              <h4>Web designer</h4>
+              <div class="mock-status"><i></i> W toku — layout</div>
+              <div class="mock-meta">Ostatni check-in · 12 min</div>
+            </div>
+            <div class="mock-card">
+              <div class="role">03 · Rola</div>
+              <h4>Software PM</h4>
+              <div class="mock-status idle"><i></i> Czeka na zatwierdzenie</div>
+              <div class="mock-meta">Ticket flow · 3 otwarte</div>
+            </div>
+            <div class="mock-card">
+              <div class="role">04 · Rola</div>
+              <h4>Tester</h4>
+              <div class="mock-status wait"><i></i> Eskalacja do Ciebie</div>
+              <div class="mock-meta">Regresja · raport gotowy</div>
+            </div>
+          </div>
+        </div>
+        <div class="mock-fade"></div>
+      </div>
+    </div>
+
+    <section class="band" aria-labelledby="stats-heading">
+      <div class="wrap">
+        <p class="section-label" id="stats-heading">Fakty oferty — nie obietnice ROI</p>
+        <div class="stats">
+          <div class="stat">
+            <p class="num">~3 dni</p>
+            <p class="label">do uruchomienia typowego startu</p>
+          </div>
+          <div class="stat">
+            <p class="num">2–3 boty</p>
+            <p class="label">typowy zespół na jeden workflow</p>
+          </div>
+          <div class="stat">
+            <p class="num">4 role</p>
+            <p class="label">w aktualnym katalogu</p>
+          </div>
+          <div class="stat">
+            <p class="num">HitL</p>
+            <p class="label">Human in the Loop przy ryzyku</p>
+          </div>
+          <p class="stats-note">Liczby z oferty getStanley — zakres i tempo ustalamy po rozmowie o Twoim workflow.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <section>
+        <p class="section-label">Dla kogo</p>
+        <h2 class="section-title">Dla właścicieli i operacji</h2>
+        <p class="section-sub">Oferta jest skierowana do właścicieli firm oraz osób odpowiedzialnych za działania operacyjne, którzy chcą usystematyzować procesy pochłaniające czas zespołu, zeskalować działania lub zoptymalizować koszt zespołu — realizacja wielu zadań w firmie jest możliwa bez przekazywania botom decyzji strategicznych ani działań o wysokim ryzyku.</p>
+        <p class="section-sub">Typowy zespół na start: 2–3 boty na jeden workflow; uruchomienie w około 3 dni.</p>
+      </section>
+
+      <section>
+        <p class="section-label">Kontrola</p>
+        <h2 class="section-title">Jak zapewniamy kontrolę</h2>
+        <p class="section-sub">Model wdrożenia oparty na regułach, zatwierdzeniach człowieka (Human in the Loop) i eskalacji przy niepewności lub ryzyku.</p>
+        <div class="pillars">
+          <div class="pillar">
+            <div class="idx">01</div>
+            <h3>Jasne zasady</h3>
+            <p>Każdy bot ma określoną rolę, zakres uprawnień i reguły działania — bez nieprzejrzystej „czarnej skrzynki”.</p>
+          </div>
+          <div class="pillar">
+            <div class="idx">02</div>
+            <h3>Kontrola człowieka</h3>
+            <p>Wysyłki, płatności i inne działania nieodwracalne wymagają Twojej uwagi i zatwierdzenia.</p>
+          </div>
+          <div class="pillar">
+            <div class="idx">03</div>
+            <h3>Eskalacja</h3>
+            <p>Gdy bot nie ma wystarczającej pewności, przekazuje sprawę człowiekowi. W pętli zwrotnej uczy się Twoich decyzji, aby podejmować samemu jeszcze lepsze działania.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="role">
+        <p class="section-label">Katalog</p>
+        <h2 class="section-title">Dostępne role botów</h2>
+        <p class="section-sub">Aktualny katalog ról — stopniowo rozszerzany.</p>
+        <div class="grid roles">
+          <article class="card">
+            <div class="num">01</div>
+            <h3>Web designer</h3>
+            <p>Układy stron, struktura interfejsu i prace nad layoutem.</p>
+          </article>
+          <article class="card">
+            <div class="num">02</div>
+            <h3>Graphic designer</h3>
+            <p>Materiały wizualne, assety graficzne i spójność brandowa.</p>
+          </article>
+          <article class="card">
+            <div class="num">03</div>
+            <h3>Software development PM</h3>
+            <p>Planowanie prac, obieg ticketów, statusy i koordynacja zespołu deweloperskiego.</p>
+          </article>
+          <article class="card">
+            <div class="num">04</div>
+            <h3>Tester</h3>
+            <p>Testy, regresja i raportowanie błędów względem jasno zdefiniowanych kryteriów ukończenia.</p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <p class="section-label">Proces</p>
+        <h2 class="section-title">Przebieg współpracy</h2>
+        <p class="section-sub">Od uzgodnienia zakresu do przekazania działającego workflow — z eskalacją i nadzorem jakości.</p>
+        <div class="steps">
+          <article class="step"><div class="num">01</div><h3>Zakres</h3><p>Ustalenie procesów do przejęcia.</p></article>
+          <article class="step"><div class="num">02</div><h3>Role</h3><p>Definicja małych, nazwanych botów.</p></article>
+          <article class="step"><div class="num">03</div><h3>Trening</h3><p>Dopasowanie do Twojego standardu pracy.</p></article>
+          <article class="step"><div class="num">04</div><h3>Wdrożenie</h3><p>Integracja z narzędziami Twojej firmy.</p></article>
+          <article class="step"><div class="num">05</div><h3>Przekazanie</h3><p>Eskalacja, zatwierdzenia i nadzór jakości.</p></article>
+        </div>
+      </section>
+
+      <section>
+        <p class="section-label">Przed startem</p>
+        <h2 class="section-title">Co ustalasz przed startem</h2>
+        <p class="section-sub">Bez obiecanek ROI — konkretny zakres, zanim bot ruszy w Twoich narzędziach.</p>
+        <ul class="checklist">
+          <li><span class="tick">✓</span><span>Mapa jednego workflow i lista decyzji, które zostają po Twojej stronie</span></li>
+          <li><span class="tick">✓</span><span>Nazwane role botów z zakresem i regułami działania</span></li>
+          <li><span class="tick">✓</span><span>Punkty eskalacji: kiedy bot pyta zamiast działać na domysłach</span></li>
+          <li><span class="tick">✓</span><span>Plan integracji z narzędziami, z których już korzystasz</span></li>
+          <li><span class="tick">✓</span><span>Kryteria ukończenia oraz check-iny jakości po przekazaniu</span></li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="band cta-band" id="kontakt">
+      <div class="wrap">
+        <div class="cta-grid">
+          <div>
+            <p class="section-label">Kontakt</p>
+            <h2>Omów pierwszy workflow</h2>
+            <p>Wypełnij formularz. Zgłoszenie trafia do pipeline sprzedaży getStanley — odpowiadamy w ciągu 1 godziny (7 dni w tygodniu, 24 godziny). Jedynie w przypadku decyzji wymagających człowieka po stronie zespołu getStanley czas odpowiedzi może ulec wydłużeniu. Zespół getStanley pracuje od poniedziałku do piątku w godzinach 8–17.</p>
+          </div>
+          <form class="lead-form" id="lead-form" novalidate>
+            <div class="field">
+              <label for="lead_type">Cel zgłoszenia</label>
+              <select id="lead_type" name="lead_type" required>
+                <option value="bot_team">Zgłosić pomysł lub potrzebę</option>
+                <option value="workflow_call">Umówić rozmowę o możliwościach wdrożenia</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="name">Imię i nazwisko</label>
+              <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="email">E-mail służbowy</label>
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" />
+            </div>
+            <div class="field">
+              <label for="company">Firma / organizacja</label>
+              <input id="company" name="company" type="text" autocomplete="organization" required maxlength="160" />
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="phone">Telefon <span style="opacity:.7">(opcjonalnie)</span></label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40" />
+              </div>
+              <div class="field">
+                <label for="website">Strona WWW <span style="opacity:.7">(opcjonalnie)</span></label>
+                <input id="website" name="website" type="url" autocomplete="url" maxlength="200" placeholder="https://" />
+              </div>
+            </div>
+            <div class="field" id="preferred_time_wrap" hidden>
+              <label for="preferred_time">Kiedy rozmawiamy? <span style="opacity:.7">(opcjonalnie)</span></label>
+              <input id="preferred_time" name="preferred_time" type="text" maxlength="160" placeholder="np. wtorek–czwartek po 14:00" />
+            </div>
+            <div class="field">
+              <label for="message">Wiadomość</label>
+              <textarea id="message" name="message" required maxlength="2000" placeholder="Jaki pomysł lub potrzebę chcesz zgłosić?"></textarea>
+            </div>
+            <input class="hp" type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <button class="btn-primary" type="submit" id="lead-submit">Wyślij zgłoszenie</button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p class="footer-word" aria-hidden="true">getStanley</p>
+      <div class="footer-row">
+        <div>© <span id="y"></span> getStanley</div>
+        <div>Leady: formularz powyżej</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    // LOCALES — add new languages here
+    const LOCALES = [
+      { code: "pl", label: "Polski", path: "/pl/" },
+      { code: "en", label: "English", path: "/en/" }
+    ];
+
+    (function initLangSwitch() {
+      const root = document.querySelector(".lang-switch");
+      if (!root) return;
+      const current = root.getAttribute("data-locale") || "pl";
+      const btn = document.getElementById("lang-btn");
+      const menu = document.getElementById("lang-menu");
+      const currentLabel = root.querySelector(".lang-switch__current");
+      const cur = LOCALES.find(function (l) { return l.code === current; }) || LOCALES[0];
+      if (currentLabel) currentLabel.textContent = cur.label;
+
+      menu.innerHTML = "";
+      LOCALES.forEach(function (loc) {
+        const li = document.createElement("li");
+        li.setAttribute("role", "option");
+        const a = document.createElement("a");
+        a.href = loc.path;
+        a.textContent = loc.label;
+        a.setAttribute("role", "option");
+        if (loc.code === current) a.setAttribute("aria-current", "page");
+        a.addEventListener("click", function (ev) {
+          ev.preventDefault();
+          const hash = window.location.hash || "";
+          window.location.assign(loc.path + hash);
+        });
+        li.appendChild(a);
+        menu.appendChild(li);
+      });
+
+      function closeMenu() {
+        menu.hidden = true;
+        btn.setAttribute("aria-expanded", "false");
+      }
+      function openMenu() {
+        menu.hidden = false;
+        btn.setAttribute("aria-expanded", "true");
+      }
+      btn.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        if (menu.hidden) openMenu(); else closeMenu();
+      });
+      document.addEventListener("click", function () { closeMenu(); });
+      document.addEventListener("keydown", function (ev) {
+        if (ev.key === "Escape") closeMenu();
+      });
+      menu.addEventListener("click", function (ev) { ev.stopPropagation(); });
+    })();
+
+    const LEAD_ENDPOINT = "https://formsubmit.co/ajax/getstanley@agentmail.to";
+
+    const form = document.getElementById("lead-form");
+    const statusEl = document.getElementById("form-status");
+    const submitBtn = document.getElementById("lead-submit");
+    const typeSelect = document.getElementById("lead_type");
+    const messageEl = document.getElementById("message");
+    const preferredWrap = document.getElementById("preferred_time_wrap");
+
+    const placeholders = {
+      bot_team: "Jaki pomysł lub potrzebę chcesz zgłosić?",
+      workflow_call: "Jakie możliwości wdrożenia chcesz omówić?"
+    };
+
+    function syncLeadTypeUI() {
+      const t = typeSelect.value;
+      messageEl.placeholder = placeholders[t] || placeholders.bot_team;
+      preferredWrap.hidden = t !== "workflow_call";
+      if (t !== "workflow_call") form.preferred_time.value = "";
+    }
+
+    typeSelect.addEventListener("change", syncLeadTypeUI);
+    syncLeadTypeUI();
+
+    document.querySelectorAll("[data-lead-type]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        const t = el.getAttribute("data-lead-type");
+        if (t) {
+          typeSelect.value = t;
+          syncLeadTypeUI();
+        }
+      });
+    });
+
+    form.addEventListener("submit", async function (ev) {
+      ev.preventDefault();
+      statusEl.textContent = "";
+      statusEl.className = "form-status";
+
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const company = form.company.value.trim();
+      const message = form.message.value.trim();
+      const leadType = form.lead_type.value;
+
+      if (!name || !email || !company || !message) {
+        statusEl.textContent = "Uzupełnij imię, e-mail, firmę i wiadomość.";
+        statusEl.classList.add("err");
+        return;
+      }
+
+      if (form.hp.value) {
+        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Odpowiemy w ciągu 1 godziny (z zastrzeżeniem decyzji po stronie zespołu).";
+        statusEl.classList.add("ok");
+        form.reset();
+        syncLeadTypeUI();
+        return;
+      }
+
+      const phone = form.phone.value.trim();
+      const website = form.website.value.trim();
+      const preferredTime = leadType === "workflow_call" ? form.preferred_time.value.trim() : "";
+      const pageUrl = window.location.href.split("#")[0];
+      const submittedAt = new Date().toISOString();
+      const ctaLabel = leadType === "bot_team" ? "Zgłoś pomysł lub potrzebę" : "Umów rozmowę o możliwościach wdrożenia";
+      const bodyLines = [
+        "Imię: " + name,
+        "Email: " + email,
+        "Telefon: " + phone,
+        "Firma: " + company,
+        "CTA: " + ctaLabel,
+        "Wiadomość: " + message,
+        preferredTime ? ("Preferowany termin rozmowy: " + preferredTime) : "",
+        website ? ("WWW leada: " + website) : "",
+        "Strona: " + pageUrl,
+        "Czas: " + submittedAt,
+        "lead_type: " + leadType,
+        "source: landing_getstanley"
+      ].filter(Boolean).join("\n");
+
+      const payload = {
+        name: name,
+        email: email,
+        company: company,
+        phone: phone,
+        website: website,
+        preferred_time: preferredTime,
+        message: bodyLines,
+        _subject: "[Lead] " + ctaLabel + " — " + name + " / " + company,
+        _replyto: email,
+        _template: "box",
+        _captcha: "false",
+        _autoresponse: "Dziękujemy — getStanley otrzymał Twoje zgłoszenie. Odpowiadamy w ciągu 1 godziny (7/24); przy decyzjach wymagających człowieka po naszej stronie czas może się wydłużyć. Zespół pracuje pn–pt 8–17. Oferta: https://stanleyagent.github.io/pl/"
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Wysyłanie…";
+
+      try {
+        const res = await fetch(LEAD_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+        var data = null;
+        try { data = await res.json(); } catch (_) {}
+        if (!res.ok || (data && data.success === "false")) throw new Error("bad status");
+        form.reset();
+        syncLeadTypeUI();
+        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Odpowiemy w ciągu 1 godziny (z zastrzeżeniem decyzji po stronie zespołu).";
+        statusEl.classList.add("ok");
+      } catch (err) {
+        statusEl.textContent = "Nie udało się wysłać. Spróbuj ponownie za chwilę.";
+        statusEl.classList.add("err");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Wyślij zgłoszenie";
+      }
+    });
+  </script>
+</body>
+</html>
