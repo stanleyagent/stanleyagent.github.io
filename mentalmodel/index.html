@@ -430,6 +430,60 @@
       .wrap { width: min(1120px, calc(100% - 1.5rem)); }
       .nav-cta { font-size: 0.84rem; padding: 0.6rem 0.85rem; }
     }
+
+    /* Illustrations */
+    .illus {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+      background: var(--bg-card);
+    }
+    .illus-wrap {
+      margin: 0 0 1.75rem;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .illus-wrap.tight { margin-bottom: 1.35rem; }
+    .hero-fig {
+      margin: 0;
+      grid-column: 1 / -1;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    @media (min-width: 900px) {
+      .hero {
+        grid-template-columns: 1.15fr 1fr;
+        align-items: center;
+      }
+      .hero-fig {
+        grid-column: auto;
+        align-self: center;
+      }
+      .hero-copy { display: flex; flex-direction: column; gap: 0; }
+      .hero-copy .lede { margin-top: 1.25rem; }
+      .hero-copy .hero-actions { margin-top: 1.5rem; }
+    }
+    @media (max-width: 899px) {
+      .hero-fig { order: 3; }
+      .hero-copy { display: contents; }
+    }
+    .problem-illus {
+      margin: 0 0 1.75rem;
+      max-width: 42rem;
+    }
+    @media (min-width: 700px) {
+      .problem-illus { max-width: 36rem; }
+    }
+    #model .flow-illus {
+      margin: 0 0 1.35rem;
+    }
+    #przed-po .ba-illus {
+      margin: 0 0 1.5rem;
+    }
   </style>
 </head>
 <body>
@@ -448,17 +502,18 @@
   <main>
     <div class="wrap">
       <section class="hero">
-        <div>
+        <div class="hero-copy">
           <div class="eyebrow">Model mentalny procesów</div>
           <h1>Procesy masz w głowie. Zróbmy z nich model, który bot wykona — decyzje zostają u Ciebie.</h1>
-        </div>
-        <div class="hero-right">
           <p class="lede">Bez wielomiesięcznej dokumentacji: wyciągamy workflow, decyzje i wyjątki z Twojej głowy. Bot dostaje reguły; Ty zachowujesz listę decyzji człowieka.</p>
           <div class="hero-actions">
             <a class="btn-primary" href="#kontakt" data-lead-type="workflow_call">Rozmowa o modelu mentalnym</a>
             <a class="btn-ghost" href="/pl/">Oferta getStanley</a>
           </div>
         </div>
+        <figure class="hero-fig">
+          <img class="illus" src="../assets/mentalmodel/hero.png" width="1280" height="720" alt="Chaotyczne okna interfejsu przechodzą w uporządkowany przepływ procesów z jasnym zatwierdzeniem na końcu" loading="eager" decoding="async" />
+        </figure>
       </section>
     </div>
 
@@ -467,6 +522,9 @@
         <p class="section-label">Problem</p>
         <h2 class="section-title" id="problem-title">Gdy firma wie tylko to, co Ty</h2>
         <p class="section-sub">Typowy właściciel MŚP trzyma procesy w głowie. To działa — aż przestaje.</p>
+        <figure class="illus-wrap problem-illus">
+          <img class="illus" src="../assets/mentalmodel/problem.png" width="1280" height="720" alt="Trzy ikony problemów właściciela: ciągłe telefony, procesy tylko w głowie oraz zarządzanie firmą z plaży" loading="lazy" decoding="async" />
+        </figure>
         <div class="pillars">
           <div class="pillar">
             <div class="idx">01</div>
@@ -492,6 +550,10 @@
         <p class="section-label">Czym jest model mentalny</p>
         <h2 class="section-title" id="model-title">U getStanley to mapa: procesy → decyzje → boty + HITL</h2>
         <p class="section-sub">Nie piszemy encyklopedii. Wyciągamy to, co już masz w głowie: kroki, kto decyduje, kiedy bot pyta i co jest nieodwracalne.</p>
+
+        <figure class="illus-wrap flow-illus tight">
+          <img class="illus" src="../assets/mentalmodel/flow.png" width="1280" height="720" alt="Cztery etapy: wiedza właściciela, mapa procesu, boty w narzędziach, zatwierdzenie człowieka" loading="lazy" decoding="async" />
+        </figure>
 
         <figure class="flow" aria-label="Schemat: głowa → model → boty z HITL → decyzje człowieka">
           <div class="flow-box">
@@ -549,6 +611,9 @@
         <p class="section-label">Przed / po</p>
         <h2 class="section-title" id="przed-po-title">Jeden właściciel, jeden scenariusz</h2>
         <p class="section-sub">Nie branże — konkret: firma stoi na Tobie, a Ty chcesz oddać rutynę bez oddawania kontroli.</p>
+        <figure class="illus-wrap ba-illus">
+          <img class="illus" src="../assets/mentalmodel/before-after.png" width="1280" height="720" alt="Po lewej chaotyczne biurko pełne powiadomień, po prawej spokojny dashboard z przyciskiem zatwierdzenia" loading="lazy" decoding="async" />
+        </figure>
         <div class="before-after">
           <article class="ba-card">
             <p class="tag">Przed</p>
