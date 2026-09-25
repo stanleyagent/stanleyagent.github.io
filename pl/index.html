@@ -102,8 +102,9 @@
     h1 {
       font-weight: 300; letter-spacing: -0.045em;
       font-size: clamp(2.15rem, 6.2vw, 4.75rem);
-      line-height: 1.05; margin: 0;
-      max-width: 14ch;
+      line-height: 1.08; margin: 0;
+      max-width: 18ch;
+      text-wrap: balance;
     }
     .hero-right { display: flex; flex-direction: column; gap: 1.5rem; padding-bottom: 0.35rem; }
     .lede {
@@ -484,6 +485,88 @@
       .hitl-return-svg--col { display: block; }
     }
 
+
+    /* —— Who it's for —— */
+    .scenarios {
+      display: grid; gap: 1rem;
+    }
+    @media (min-width: 900px) {
+      .scenarios { grid-template-columns: repeat(3, 1fr); gap: 1.15rem; align-items: stretch; }
+    }
+    .scenario {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1.45rem 1.3rem 1.35rem;
+      min-width: 0;
+    }
+    .scenario h3 {
+      margin: 0 0 1.05rem;
+      font-size: 1.15rem; font-weight: 500; letter-spacing: -0.02em;
+    }
+    .scenario dl { margin: 0; display: grid; gap: 0.85rem; }
+    .scenario dt {
+      color: var(--teal);
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 0 0 0.2rem;
+    }
+    .scenario dd { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+    /* —— Pilot —— */
+    .pilot {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--bg-card);
+      padding: 1.5rem 1.4rem 1.45rem;
+    }
+    .pilot p { margin: 0 0 1.15rem; color: var(--muted); max-width: 42rem; }
+
+    /* —— Roles accordion —— */
+    .roles-acc {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--bg-card);
+    }
+    .roles-acc > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 1.15rem 1.25rem;
+      font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .roles-acc > summary::-webkit-details-marker { display: none; }
+    .roles-acc > summary::after {
+      content: "";
+      width: 0.55rem; height: 0.55rem;
+      border-right: 1.5px solid var(--muted);
+      border-bottom: 1.5px solid var(--muted);
+      transform: rotate(45deg);
+      flex: 0 0 auto;
+      margin-top: -0.2rem;
+    }
+    .roles-acc[open] > summary::after {
+      transform: rotate(225deg);
+      margin-top: 0.2rem;
+    }
+    .roles-acc__body {
+      padding: 0.15rem 1.15rem 1.25rem;
+      border-top: 1px solid var(--line);
+    }
+    .roles-acc__body .section-label { margin-top: 1.15rem; }
+    .roles-acc .section-title { max-width: none; }
+    @media (max-width: 639px) {
+      .roles-acc > summary { font-size: 1.35rem; padding: 1rem 0.95rem; }
+      .scenario { padding: 1.2rem 1rem 1.15rem; }
+      .pilot { padding: 1.2rem 1rem 1.15rem; }
+    }
+
     /* —— Mobile responsiveness —— */
     @media (max-width: 639px) {
       .wrap { width: min(1120px, calc(100% - 2rem)); }
@@ -604,6 +687,7 @@
     <div class="wrap inner">
       <div class="brand">getStanley</div>
       <nav class="nav-links" aria-label="Główne">
+        <a class="text-link" href="#dla-kogo">Dla kogo</a>
         <a class="text-link" href="#role">Role</a>
         <a class="text-link" href="#kontakt">Kontakt</a>
         <div class="lang-switch" data-locale="pl">
@@ -623,10 +707,10 @@
       <section class="hero">
         <div>
           <div class="eyebrow">Wdrożenie i utrzymanie botów dla Twojego biznesu</div>
-          <h1>Powtarzalną pracę w firmach na całym świecie przejmują boty. Ważne decyzje i kierunek działania są podejmowane przez ludzi.</h1>
+          <h1>Oddaj botom powtarzalną robotę w Twojej firmie. Decyzje zostają u Ciebie.</h1>
         </div>
         <div class="hero-right">
-          <p class="lede">getStanley to usługa wdrożenia i utrzymania zespołów botów pod standard Twojej firmy — pracują w Twoich aplikacjach, niczego nie rewolucjonizują, ale mogą znacznie zmienić sposób pracy Twojej firmy. Zakres i reguły są z góry ustalone; kontakt z klientami, płatności i inne działania nieodwracalne zawsze wymagają zatwierdzenia człowieka.</p>
+          <p class="lede">W ~3 dni wdrażamy 2–3 boty na jeden workflow w Twoich narzędziach. Wysyłki, płatności i inne działania nieodwracalne zawsze wymagają Twojego OK.</p>
           <div class="hero-actions">
             <a class="btn-primary" href="#kontakt" data-lead-type="bot_team">Zgłoś pomysł lub potrzebę</a>
             <a class="btn-ghost" href="#kontakt" data-lead-type="workflow_call">Umów rozmowę o możliwościach wdrożenia</a>
@@ -673,6 +757,49 @@
       </div>
     </div>
 
+    <div class="wrap">
+      <section id="dla-kogo" aria-labelledby="dla-kogo-title">
+        <p class="section-label">Scenariusze</p>
+        <h2 class="section-title" id="dla-kogo-title">Dla kogo</h2>
+        <p class="section-sub">Bot przejmuje powtarzalną pracę. Cena, wysyłka i inne decyzje zostają u człowieka.</p>
+        <div class="scenarios">
+          <article class="scenario">
+            <h3>Firma usługowa</h3>
+            <dl>
+              <div><dt>Przed</dt><dd>Dziesiątki zapytań ofertowych, wyceny na jednej osobie.</dd></div>
+              <div><dt>Po</dt><dd>Bot zbiera brief i draftuje oferty.</dd></div>
+              <div><dt>Człowiek</dt><dd>Zatwierdza cenę i wysyłkę.</dd></div>
+            </dl>
+          </article>
+          <article class="scenario">
+            <h3>E-commerce</h3>
+            <dl>
+              <div><dt>Przed</dt><dd>Setki maili „gdzie moje zamówienie”.</dd></div>
+              <div><dt>Po</dt><dd>Bot odpowiada na statusy według reguł.</dd></div>
+              <div><dt>Człowiek</dt><dd>Reklamacje i wyjątki.</dd></div>
+            </dl>
+          </article>
+          <article class="scenario">
+            <h3>Biuro / kancelaria</h3>
+            <dl>
+              <div><dt>Przed</dt><dd>Dokumenty w wielu formatach, ręczne przepisywanie.</dd></div>
+              <div><dt>Po</dt><dd>Bot sortuje i uzupełnia.</dd></div>
+              <div><dt>Człowiek</dt><dd>Decyzje merytoryczne.</dd></div>
+            </dl>
+          </article>
+        </div>
+      </section>
+
+      <section id="pilot" aria-labelledby="pilot-title">
+        <p class="section-label">Pilotaż</p>
+        <h2 class="section-title" id="pilot-title">Pierwsze 10 firm</h2>
+        <div class="pilot">
+          <p>Uruchamiamy pilotaż dla pierwszych 10 firm: wdrożenie jednego workflow w około 3 dni, na warunkach pilotażowych. Bez obietnic ROI — uczciwy test na jednym procesie. Wejście: wypełnij formularz.</p>
+          <a class="btn-primary" href="#kontakt" data-lead-type="bot_team">Zgłoś pomysł lub potrzebę</a>
+        </div>
+      </section>
+    </div>
+
     <section class="band" aria-labelledby="stats-heading">
       <div class="wrap">
         <p class="section-label" id="stats-heading">Fakty oferty — nie obietnice ROI</p>
@@ -700,7 +827,7 @@
 
     <div class="wrap">
       <section>
-        <p class="section-label">Dla kogo</p>
+        <p class="section-label">Odbiorcy</p>
         <h2 class="section-title">Dla właścicieli i operacji</h2>
         <p class="section-sub">Oferta jest skierowana do właścicieli firm oraz osób odpowiedzialnych za działania operacyjne, którzy chcą usystematyzować procesy pochłaniające czas zespołu, zeskalować działania lub zoptymalizować koszt zespołu — realizacja wielu zadań w firmie jest możliwa bez przekazywania botom decyzji strategicznych ani działań o wysokim ryzyku.</p>
         <p class="section-sub">Typowy zespół na start: 2–3 boty na jeden workflow; uruchomienie w około 3 dni.</p>
@@ -755,6 +882,9 @@
       </section>
 
       <section id="role">
+        <details class="roles-acc">
+          <summary>Przykładowe role botów</summary>
+          <div class="roles-acc__body">
         <p class="section-label">Katalog</p>
         <h2 class="section-title">Obszary, w których wdrażamy boty</h2>
         <p class="section-sub">Pokazujemy możliwości w grupach — dokładny zestaw ról ustalamy pod Twój workflow.</p>
@@ -802,6 +932,8 @@
             <p class="role-note">Dopasowujemy role do Twojego briefu.</p>
           </article>
         </div>
+          </div>
+        </details>
       </section>
 
       <section>
@@ -837,7 +969,7 @@
           <div>
             <p class="section-label">Kontakt</p>
             <h2>Omów pierwszy workflow</h2>
-            <p>Wypełnij formularz. Zgłoszenie trafia do pipeline sprzedaży getStanley — odpowiadamy w ciągu 1 godziny (7 dni w tygodniu, 24 godziny). Jedynie w przypadku decyzji wymagających człowieka po stronie zespołu getStanley czas odpowiedzi może ulec wydłużeniu. Zespół getStanley pracuje od poniedziałku do piątku w godzinach 8–17.</p>
+            <p>Wypełnij formularz. Zgłoszenie trafia do pipeline sprzedaży getStanley. Pierwszą odpowiedź (do ok. 1 godziny, także poza 8–17) przygotowuje nasz bot sprzedaży: potwierdza zgłoszenie i proponuje termin. Rozmowę prowadzi człowiek. Zespół getStanley pracuje pn–pt w godz. 8–17.</p>
           </div>
           <form class="lead-form" id="lead-form" novalidate>
             <div class="field">
@@ -1004,7 +1136,7 @@
       }
 
       if (form.hp.value) {
-        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Odpowiemy w ciągu 1 godziny (z zastrzeżeniem decyzji po stronie zespołu).";
+        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Pierwszą odpowiedź (do ok. 1 godziny, także poza 8–17) przygotuje bot sprzedaży; rozmowę prowadzi człowiek. Zespół pracuje pn–pt w godz. 8–17.";
         statusEl.classList.add("ok");
         form.reset();
         syncLeadTypeUI();
@@ -1044,7 +1176,7 @@
         _replyto: email,
         _template: "box",
         _captcha: "false",
-        _autoresponse: "Dziękujemy — getStanley otrzymał Twoje zgłoszenie. Odpowiadamy w ciągu 1 godziny (7/24); przy decyzjach wymagających człowieka po naszej stronie czas może się wydłużyć. Zespół pracuje pn–pt 8–17. Oferta: https://stanleyagent.github.io/pl/"
+        _autoresponse: "Dziękujemy — getStanley otrzymał Twoje zgłoszenie. Pierwszą odpowiedź (do ok. 1 godziny, także poza 8–17) przygotowuje nasz bot sprzedaży: potwierdza zgłoszenie i proponuje termin. Rozmowę prowadzi człowiek. Zespół getStanley pracuje pn–pt w godz. 8–17. Oferta: https://stanleyagent.github.io/pl/"
       };
 
       submitBtn.disabled = true;
@@ -1064,7 +1196,7 @@
         if (!res.ok || (data && data.success === "false")) throw new Error("bad status");
         form.reset();
         syncLeadTypeUI();
-        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Odpowiemy w ciągu 1 godziny (z zastrzeżeniem decyzji po stronie zespołu).";
+        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Pierwszą odpowiedź (do ok. 1 godziny, także poza 8–17) przygotuje bot sprzedaży; rozmowę prowadzi człowiek. Zespół pracuje pn–pt w godz. 8–17.";
         statusEl.classList.add("ok");
       } catch (err) {
         statusEl.textContent = "Nie udało się wysłać. Spróbuj ponownie za chwilę.";
