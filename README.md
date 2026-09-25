@@ -1,5 +1,5 @@
-# getStanley — landing (GitHub Pages)
+# getStanley
 
-Landing oferty getStanley: marketing i promocja produktu cyfrowego do edukacji.
+Landing oferty getStanley: zespoły botów-pracowników AI.
 
-Po włączeniu Pages: `https://stanleyagent.github.io/landing-oferta/`.
+Live: https://stanleyagent.github.io/
