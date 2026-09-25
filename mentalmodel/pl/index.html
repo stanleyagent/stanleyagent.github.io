@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Model mentalny procesów — getStanley dla właścicieli MŚP</title>
+  <link rel="canonical" href="https://stanleyagent.github.io/mentalmodel/pl/" />
+  <link rel="alternate" hreflang="pl" href="https://stanleyagent.github.io/mentalmodel/pl/" />
+  <link rel="alternate" hreflang="en" href="https://stanleyagent.github.io/mentalmodel/en/" />
+  <link rel="alternate" hreflang="x-default" href="https://stanleyagent.github.io/mentalmodel/pl/" />
+  <meta name="description" content="Wyciągnij procesy z głowy właściciela MŚP do modelu: reguły, decyzje człowieka i boty z Human in the Loop. Pierwszy krok przed wdrożeniem botów getStanley." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0c0c0b;
+      --bg-band: #10100e;
+      --bg-card: #161614;
+      --bg-card-2: #1c1c19;
+      --text: #f5f4f0;
+      --muted: #9a9890;
+      --muted-2: #6e6c64;
+      --yellow: #e8d98a;
+      --yellow-hover: #f0e6a8;
+      --teal: #3dd6c6;
+      --line: rgba(245, 244, 240, 0.1);
+      --line-strong: rgba(245, 244, 240, 0.16);
+      --radius: 6px;
+      --danger: #ff8a8a;
+      --ink: #0c0c0b;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1120px, calc(100% - 2.5rem)); margin: 0 auto; }
+
+    .site-header {
+      position: sticky; top: 0; z-index: 40;
+      background: rgba(12, 12, 11, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .site-header .inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.95rem 0; gap: 1rem;
+    }
+    .brand {
+      font-weight: 600; letter-spacing: -0.03em; font-size: 1.05rem;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 0.5rem 1.25rem; flex-wrap: wrap;
+    }
+    .nav-links a.text-link {
+      color: var(--muted); font-size: 0.9rem; font-weight: 450;
+    }
+    .nav-links a.text-link:hover { color: var(--text); }
+    .btn-primary, button.btn-primary {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.7rem 1.1rem; border-radius: var(--radius); border: none; cursor: pointer;
+      background: var(--yellow); color: var(--ink); font-weight: 600;
+      text-decoration: none; font: inherit; font-size: 0.92rem;
+      transition: background 0.15s ease;
+    }
+    .btn-primary:hover, button.btn-primary:hover { background: var(--yellow-hover); }
+    .btn-primary:disabled { opacity: 0.6; cursor: wait; }
+    .btn-ghost {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.7rem 1.1rem; border-radius: var(--radius);
+      border: 1px solid var(--line-strong); text-decoration: none; color: var(--text);
+      background: transparent; font-size: 0.92rem; font-weight: 500;
+    }
+    .btn-ghost:hover { border-color: rgba(245,244,240,0.3); background: rgba(255,255,255,0.03); }
+    .nav-cta { padding: 0.55rem 0.95rem; font-size: 0.88rem; }
+
+    .hero {
+      padding: 5.5rem 0 3rem;
+      display: grid; gap: 2.5rem 3.5rem;
+    }
+    @media (min-width: 900px) {
+      .hero {
+        grid-template-columns: 1.35fr 0.9fr;
+        align-items: end;
+        padding: 7rem 0 3.5rem;
+      }
+    }
+    .eyebrow {
+      display: inline-block; color: var(--muted); font-size: 0.82rem;
+      letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500;
+      margin-bottom: 1.35rem;
+    }
+    h1 {
+      font-weight: 300; letter-spacing: -0.045em;
+      font-size: clamp(1.85rem, 4.8vw, 3.35rem);
+      line-height: 1.12; margin: 0;
+      max-width: 22ch;
+      text-wrap: balance;
+    }
+    .hero-right { display: flex; flex-direction: column; gap: 1.5rem; padding-bottom: 0.35rem; }
+    .lede {
+      font-size: 1.05rem; color: var(--muted); margin: 0;
+      max-width: 32rem; line-height: 1.65;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; }
+
+    section { padding: 4.5rem 0; }
+    .band { background: var(--bg-band); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .section-label {
+      color: var(--muted-2); font-size: 0.78rem; letter-spacing: 0.08em;
+      text-transform: uppercase; font-weight: 500; margin: 0 0 0.85rem;
+    }
+    .section-title {
+      font-weight: 300; letter-spacing: -0.035em;
+      font-size: clamp(1.85rem, 3.4vw, 2.75rem);
+      margin: 0 0 0.65rem; line-height: 1.15; max-width: 22ch;
+    }
+    .section-sub { color: var(--muted); margin: 0 0 2.25rem; max-width: 38rem; font-size: 1.02rem; }
+
+    .pillars { display: grid; gap: 1rem; }
+    @media (min-width: 700px) { .pillars { grid-template-columns: repeat(3, 1fr); gap: 1.15rem; } }
+    .pillar {
+      border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 1.6rem 1.45rem; background: transparent;
+      min-height: 10rem;
+    }
+    .pillar .idx { color: var(--teal); font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+    .pillar h3 { margin: 0 0 0.55rem; font-size: 1.15rem; font-weight: 500; letter-spacing: -0.02em; }
+    .pillar p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+    .flow {
+      display: grid; gap: 0.75rem;
+      margin: 0 0 2rem;
+      padding: 1.25rem 1.15rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--bg-card);
+      max-width: 100%;
+    }
+    @media (min-width: 700px) {
+      .flow {
+        grid-template-columns: repeat(4, 1fr);
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+    }
+    .flow-box {
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      padding: 1rem 0.95rem;
+      background: var(--bg);
+      min-width: 0;
+    }
+    .flow-box .n {
+      color: var(--teal); font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 0.45rem;
+    }
+    .flow-box h3 {
+      margin: 0 0 0.35rem; font-size: 1rem; font-weight: 500; letter-spacing: -0.02em;
+    }
+    .flow-box p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+    .flow-arrow {
+      display: none; color: var(--muted-2); align-self: center; justify-self: center;
+    }
+    @media (min-width: 700px) {
+      .flow { grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr; }
+      .flow-arrow { display: flex; }
+    }
+    .flow figcaption {
+      grid-column: 1 / -1;
+      margin: 0.35rem 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .before-after {
+      display: grid; gap: 1rem;
+    }
+    @media (min-width: 700px) {
+      .before-after { grid-template-columns: 1fr 1fr; gap: 1.15rem; }
+    }
+    .ba-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1.45rem 1.3rem 1.35rem;
+      min-width: 0;
+    }
+    .ba-card .tag {
+      color: var(--teal); font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 0.65rem;
+    }
+    .ba-card.after .tag { color: var(--yellow); }
+    .ba-card h3 {
+      margin: 0 0 0.55rem; font-size: 1.15rem; font-weight: 500; letter-spacing: -0.02em;
+    }
+    .ba-card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+    .punchline {
+      margin: 1.35rem 0 0;
+      padding: 1rem 1.15rem;
+      border-left: 2px solid var(--yellow);
+      background: rgba(232, 217, 138, 0.05);
+      border-radius: 0 8px 8px 0;
+      color: var(--text);
+      font-size: 1.02rem;
+      max-width: 42rem;
+    }
+
+    .steps {
+      display: grid; gap: 0; border-top: 1px solid var(--line);
+      counter-reset: step;
+    }
+    @media (min-width: 900px) {
+      .steps { grid-template-columns: repeat(5, 1fr); }
+    }
+    @media (min-width: 560px) and (max-width: 899px) {
+      .steps { grid-template-columns: repeat(3, 1fr); }
+    }
+    .step {
+      padding: 1.5rem 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--line); border-right: 1px solid var(--line);
+    }
+    @media (min-width: 900px) {
+      .step:last-child { border-right: none; }
+    }
+    .step .num {
+      color: var(--yellow); font-size: 0.8rem; font-weight: 600;
+      margin-bottom: 0.85rem; letter-spacing: 0.04em;
+    }
+    .step h3 { margin: 0 0 0.4rem; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.02em; }
+    .step p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+    .fit-grid {
+      display: grid; gap: 1rem;
+    }
+    @media (min-width: 700px) {
+      .fit-grid { grid-template-columns: 1fr 1fr; gap: 1.15rem; }
+    }
+    .fit-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1.45rem 1.3rem;
+      background: var(--bg-card);
+      min-width: 0;
+    }
+    .fit-card h3 {
+      margin: 0 0 0.75rem; font-size: 1.15rem; font-weight: 500; letter-spacing: -0.02em;
+    }
+    .fit-card ul {
+      margin: 0; padding: 0 0 0 1.1rem; color: var(--muted); font-size: 0.95rem;
+    }
+    .fit-card li { margin: 0 0 0.45rem; }
+    .fit-card.no { border-color: rgba(255, 138, 138, 0.25); }
+    .fit-card.no h3 { color: var(--danger); }
+
+    .pilot {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--bg-card);
+      padding: 1.5rem 1.4rem 1.45rem;
+    }
+    .pilot p { margin: 0 0 1.15rem; color: var(--muted); max-width: 42rem; }
+
+    .faq {
+      display: grid; gap: 0; border-top: 1px solid var(--line);
+    }
+    .faq details {
+      border-bottom: 1px solid var(--line);
+      padding: 0;
+    }
+    .faq summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 1.2rem 0;
+      font-size: 1.05rem; font-weight: 500; letter-spacing: -0.02em;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after {
+      content: "";
+      width: 0.5rem; height: 0.5rem;
+      border-right: 1.5px solid var(--muted);
+      border-bottom: 1.5px solid var(--muted);
+      transform: rotate(45deg);
+      flex: 0 0 auto;
+      margin-top: -0.25rem;
+    }
+    .faq details[open] summary::after {
+      transform: rotate(225deg);
+      margin-top: 0.15rem;
+    }
+    .faq .ans {
+      margin: 0 0 1.2rem;
+      color: var(--muted);
+      font-size: 0.98rem;
+      max-width: 42rem;
+    }
+
+    .inline-link {
+      color: var(--teal);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+      text-decoration-thickness: 1px;
+    }
+    .inline-link:hover { color: var(--yellow); }
+
+    .cta-band { padding: 4.5rem 0 5rem; }
+    .cta-grid { display: grid; gap: 2.5rem; }
+    @media (min-width: 860px) {
+      .cta-grid { grid-template-columns: 0.85fr 1.15fr; gap: 3.5rem; align-items: start; }
+    }
+    .cta-band h2 {
+      margin: 0 0 0.75rem; font-weight: 300; letter-spacing: -0.035em;
+      font-size: clamp(1.85rem, 3.2vw, 2.6rem); line-height: 1.15;
+    }
+    .cta-band > .cta-grid > div > p { margin: 0; color: var(--muted); max-width: 28rem; }
+    form.lead-form {
+      display: grid; gap: 0.9rem;
+      border: 1px solid var(--line); border-radius: 8px;
+      padding: 1.5rem 1.4rem; background: var(--bg-card);
+    }
+    .field { display: grid; gap: 0.35rem; }
+    .field label { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 0.72rem 0.85rem; border-radius: var(--radius);
+      border: 1px solid var(--line); background: var(--bg);
+      color: var(--text); font: inherit;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: 2px solid rgba(232, 217, 138, 0.4); border-color: transparent;
+    }
+    .field textarea { min-height: 110px; resize: vertical; }
+    .field select option { background: var(--bg-card); }
+    .row2 { display: grid; gap: 0.85rem; }
+    @media (min-width: 560px) { .row2 { grid-template-columns: 1fr 1fr; } }
+    .hp { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; overflow: hidden; }
+    .form-status { margin: 0; font-size: 0.9rem; min-height: 1.3em; }
+    .form-status.ok { color: var(--teal); }
+    .form-status.err { color: var(--danger); }
+
+
+    /* —— Language switcher —— */
+    .lang-switch { position: relative; }
+    .lang-switch__btn {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.45rem 0.7rem; border-radius: var(--radius);
+      border: 1px solid var(--line); background: transparent;
+      color: var(--muted); font: inherit; font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .lang-switch__btn:hover,
+    .lang-switch__btn[aria-expanded="true"] {
+      color: var(--text); border-color: var(--line-strong); background: rgba(255,255,255,0.03);
+    }
+    .lang-switch__btn .chev {
+      display: inline-block; width: 0; height: 0;
+      border-left: 4px solid transparent; border-right: 4px solid transparent;
+      border-top: 5px solid currentColor; opacity: 0.7;
+    }
+    .lang-switch__menu {
+      position: absolute; right: 0; top: calc(100% + 0.35rem);
+      min-width: 9.5rem; margin: 0; padding: 0.35rem; list-style: none;
+      background: var(--bg-card); border: 1px solid var(--line);
+      border-radius: var(--radius); box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+      z-index: 50;
+    }
+    .lang-switch__menu[hidden] { display: none; }
+    .lang-switch__menu a {
+      display: block; padding: 0.5rem 0.7rem; border-radius: 4px;
+      color: var(--muted); font-size: 0.88rem; font-weight: 450;
+    }
+    .lang-switch__menu a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .lang-switch__menu a[aria-current="page"] {
+      color: var(--text); background: rgba(255,255,255,0.06); font-weight: 500;
+    }
+
+    footer {
+      border-top: 1px solid var(--line); padding: 3rem 0 2.5rem;
+      color: var(--muted); font-size: 0.9rem;
+    }
+    .footer-word {
+      font-size: clamp(2.5rem, 10vw, 6.5rem); font-weight: 300;
+      letter-spacing: -0.05em; color: var(--text); opacity: 0.12;
+      line-height: 1; margin: 0 0 1.5rem; user-select: none;
+    }
+    .footer-row {
+      display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem;
+      justify-content: space-between;
+    }
+    .footer-links {
+      display: flex; flex-wrap: wrap; gap: 0.65rem 1.25rem;
+    }
+    .footer-links a { color: var(--muted); }
+    .footer-links a:hover { color: var(--text); }
+
+    @media (max-width: 699px) {
+      .step { border-right: none; }
+    }
+
+    @media (max-width: 639px) {
+      .wrap { width: min(1120px, calc(100% - 2rem)); }
+      .site-header .inner { padding: 0.7rem 0; gap: 0.55rem; }
+      .nav-links a.text-link { display: none; }
+      .nav-links { flex-wrap: nowrap; gap: 0.45rem; min-width: 0; }
+      .brand { flex-shrink: 0; font-size: 0.98rem; }
+      .lang-switch__btn {
+        min-height: 2.75rem; padding: 0.45rem 0.65rem; font-size: 0.82rem;
+      }
+      .lang-switch__menu { right: 0; left: auto; }
+      .nav-cta {
+        padding: 0.5rem 0.7rem; font-size: 0.8rem; line-height: 1.25;
+        white-space: normal; text-align: center; max-width: 11rem; min-height: 2.75rem;
+      }
+      .hero { padding: 3.25rem 0 1.75rem; gap: 1.75rem; }
+      h1 {
+        font-size: clamp(1.7rem, 7.2vw, 2.25rem);
+        max-width: none; letter-spacing: -0.04em;
+      }
+      .lede { font-size: 0.98rem; }
+      .hero-actions { gap: 0.55rem; }
+      .hero-actions .btn-primary,
+      .hero-actions .btn-ghost {
+        min-height: 2.75rem; flex: 1 1 100%; text-align: center;
+      }
+      section { padding: 3rem 0; }
+      .cta-band { padding: 3rem 0 3.5rem; }
+      .section-title { max-width: none; }
+      .section-sub { margin-bottom: 1.75rem; font-size: 0.98rem; }
+      .pillar { padding: 1.35rem 1.15rem; min-height: 0; }
+      .step { padding: 1.25rem 0.85rem 1.4rem; }
+      form.lead-form { padding: 1.25rem 1.05rem; }
+      .field input, .field select, .field textarea {
+        min-height: 2.75rem; font-size: 16px;
+      }
+      .field textarea { min-height: 7rem; }
+      form.lead-form > button.btn-primary { min-height: 3rem; width: 100%; }
+      .footer-word {
+        font-size: clamp(2rem, 14vw, 3.5rem);
+        max-width: 100%; overflow-wrap: anywhere;
+      }
+      .footer-row { gap: 0.5rem 1rem; }
+      .pilot { padding: 1.2rem 1rem 1.15rem; }
+      .flow { padding: 1rem 0.85rem; }
+    }
+
+    @media (max-width: 480px) {
+      .wrap { width: min(1120px, calc(100% - 1.75rem)); }
+      .site-header .inner {
+        flex-wrap: wrap; gap: 0.5rem 0.65rem; padding: 0.65rem 0 0.75rem;
+      }
+      .nav-links { display: contents; }
+      .lang-switch { margin-left: auto; }
+      .nav-cta {
+        flex: 1 1 100%; max-width: none; width: 100%;
+        justify-content: center; font-size: 0.88rem;
+        padding: 0.65rem 1rem; min-height: 2.75rem;
+      }
+      h1 { font-size: clamp(1.65rem, 8.5vw, 2.1rem); }
+      .hero { padding: 2.85rem 0 1.25rem; }
+      section { padding: 2.75rem 0; }
+      .cta-band { padding: 2.75rem 0 3.25rem; }
+      .step { padding: 1.15rem 0.65rem 1.3rem; }
+    }
+
+    @media (max-width: 360px) {
+      .wrap { width: min(1120px, calc(100% - 1.5rem)); }
+      .nav-cta { font-size: 0.84rem; padding: 0.6rem 0.85rem; }
+    }
+
+    /* Illustrations */
+    .illus {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+      background: var(--bg-card);
+    }
+    .illus-wrap {
+      margin: 0 0 1.75rem;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .illus-wrap.tight { margin-bottom: 1.35rem; }
+    .hero-fig {
+      margin: 0;
+      grid-column: 1 / -1;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    @media (min-width: 900px) {
+      .hero {
+        grid-template-columns: 1.15fr 1fr;
+        align-items: center;
+      }
+      .hero-fig {
+        grid-column: auto;
+        align-self: center;
+      }
+      .hero-copy { display: flex; flex-direction: column; gap: 0; }
+      .hero-copy .lede { margin-top: 1.25rem; }
+      .hero-copy .hero-actions { margin-top: 1.5rem; }
+    }
+    @media (max-width: 899px) {
+      .hero-fig { order: 3; }
+      .hero-copy { display: contents; }
+    }
+    .problem-illus {
+      margin: 0 0 1.75rem;
+      max-width: 42rem;
+    }
+    @media (min-width: 700px) {
+      .problem-illus { max-width: 36rem; }
+    }
+    #model .flow-illus {
+      margin: 0 0 1.35rem;
+    }
+    #przed-po .ba-illus {
+      margin: 0 0 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap inner">
+      <a class="brand" href="/pl/">getStanley</a>
+      <nav class="nav-links" aria-label="Główne">
+        <a class="text-link" href="/pl/">Oferta</a>
+        <a class="text-link" href="#model">Model</a>
+        <a class="text-link" href="#kontakt">Kontakt</a>
+        <div class="lang-switch" data-locale="pl">
+          <button type="button" class="lang-switch__btn" id="lang-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-menu">
+            <span class="lang-switch__current">Polski</span>
+            <span class="chev" aria-hidden="true"></span>
+          </button>
+          <ul class="lang-switch__menu" id="lang-menu" role="listbox" hidden aria-label="Język"></ul>
+        </div>
+        <a class="btn-primary nav-cta" href="#kontakt" data-lead-type="workflow_call">Rozmowa o modelu</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">Model mentalny procesów</div>
+          <h1>Procesy masz w głowie. Zróbmy z nich model, który bot wykona — decyzje zostają u Ciebie.</h1>
+          <p class="lede">Bez wielomiesięcznej dokumentacji: wyciągamy workflow, decyzje i wyjątki z Twojej głowy. Bot dostaje reguły; Ty zachowujesz listę decyzji człowieka.</p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="#kontakt" data-lead-type="workflow_call">Rozmowa o modelu mentalnym</a>
+            <a class="btn-ghost" href="/pl/">Oferta getStanley</a>
+          </div>
+        </div>
+        <figure class="hero-fig">
+          <img class="illus" src="../../assets/mentalmodel/hero.png" width="1280" height="720" alt="Chaotyczne okna interfejsu przechodzą w uporządkowany przepływ procesów z jasnym zatwierdzeniem na końcu" loading="eager" decoding="async" />
+        </figure>
+      </section>
+    </div>
+
+    <section class="band" id="problem" aria-labelledby="problem-title">
+      <div class="wrap">
+        <p class="section-label">Problem</p>
+        <h2 class="section-title" id="problem-title">Gdy firma wie tylko to, co Ty</h2>
+        <p class="section-sub">Typowy właściciel MŚP trzyma procesy w głowie. To działa — aż przestaje.</p>
+        <figure class="illus-wrap problem-illus">
+          <img class="illus" src="../../assets/mentalmodel/problem.png" width="1280" height="720" alt="Trzy ikony problemów właściciela: ciągłe telefony, procesy tylko w głowie oraz zarządzanie firmą z plaży" loading="lazy" decoding="async" />
+        </figure>
+        <div class="pillars">
+          <div class="pillar">
+            <div class="idx">01</div>
+            <h3>Firma stoi, gdy nie odbierasz</h3>
+            <p>Zespół czeka na Twoje „jak to u nas robimy”. Telefon nie milknie, a sprawy się piętrzą.</p>
+          </div>
+          <div class="pillar">
+            <div class="idx">02</div>
+            <h3>Nikt poza Tobą nie zna „jak u nas”</h3>
+            <p>Nie ma mapy procesu, tylko Twoja intuicja. Nowi ludzie uczą się przez Ciebie — albo wcale.</p>
+          </div>
+          <div class="pillar">
+            <div class="idx">03</div>
+            <h3>Wakacje = zarządzanie z plaży</h3>
+            <p>Urlop bez odłączenia. Wyjątki, ceny i decyzje i tak wracają na Twój telefon.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <section id="model" aria-labelledby="model-title">
+        <p class="section-label">Czym jest model mentalny</p>
+        <h2 class="section-title" id="model-title">U getStanley to mapa: procesy → decyzje → boty + HITL</h2>
+        <p class="section-sub">Nie piszemy encyklopedii. Wyciągamy to, co już masz w głowie: kroki, kto decyduje, kiedy bot pyta i co jest nieodwracalne.</p>
+
+        <figure class="illus-wrap flow-illus tight">
+          <img class="illus" src="../../assets/mentalmodel/flow.png" width="1280" height="720" alt="Cztery etapy: wiedza właściciela, mapa procesu, boty w narzędziach, zatwierdzenie człowieka" loading="lazy" decoding="async" />
+        </figure>
+
+        <figure class="flow" aria-label="Schemat: głowa → model → boty z HITL → decyzje człowieka">
+          <div class="flow-box">
+            <p class="n">01</p>
+            <h3>Głowa</h3>
+            <p>Procesy i wyjątki u właściciela</p>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
+          </span>
+          <div class="flow-box">
+            <p class="n">02</p>
+            <h3>Model</h3>
+            <p>Kroki, reguły, lista decyzji</p>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
+          </span>
+          <div class="flow-box">
+            <p class="n">03</p>
+            <h3>Boty + HITL</h3>
+            <p>Rutyna według modelu; eskalacja przy ryzyku</p>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
+          </span>
+          <div class="flow-box">
+            <p class="n">04</p>
+            <h3>Decyzje człowieka</h3>
+            <p>Cena, wyjątek, wypłata — Twoje OK</p>
+          </div>
+          <figcaption>Efekt: bot ma reguły; Ty masz jawną listę decyzji człowieka.</figcaption>
+        </figure>
+
+        <div class="pillars">
+          <div class="pillar">
+            <div class="idx">Kroki</div>
+            <h3>Procesy → kroki</h3>
+            <p>Co się dzieje po kolei — bez zbędnej dokumentacji, tylko to, co bot ma wykonać.</p>
+          </div>
+          <div class="pillar">
+            <div class="idx">Decyzje</div>
+            <h3>Kto decyduje / kiedy bot pyta</h3>
+            <p>Punkty, w których człowiek zatwierdza albo bot eskaluje zamiast zgadywać.</p>
+          </div>
+          <div class="pillar">
+            <div class="idx">Granice</div>
+            <h3>Co jest nieodwracalne</h3>
+            <p>Wysyłki, płatności, obietnice wobec klienta — zawsze po stronie człowieka.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="przed-po" aria-labelledby="przed-po-title">
+        <p class="section-label">Przed / po</p>
+        <h2 class="section-title" id="przed-po-title">Jeden właściciel, jeden scenariusz</h2>
+        <p class="section-sub">Nie branże — konkret: firma stoi na Tobie, a Ty chcesz oddać rutynę bez oddawania kontroli.</p>
+        <figure class="illus-wrap ba-illus">
+          <img class="illus" src="../../assets/mentalmodel/before-after.png" width="1280" height="720" alt="Po lewej chaotyczne biurko pełne powiadomień, po prawej spokojny dashboard z przyciskiem zatwierdzenia" loading="lazy" decoding="async" />
+        </figure>
+        <div class="before-after">
+          <article class="ba-card">
+            <p class="tag">Przed</p>
+            <h3>Wszystko przez Ciebie</h3>
+            <p>Każdy wyjątek, wycena i „czy możemy tak?” ląduje na telefonie. Zespół działa, gdy Ty jesteś dostępny.</p>
+          </article>
+          <article class="ba-card after">
+            <p class="tag">Po</p>
+            <h3>Bot: rutyna według modelu</h3>
+            <p>Bot prowadzi powtarzalne kroki. Człowiek zatwierdza cenę, wyjątek albo wypłatę — zgodnie z listą decyzji z modelu.</p>
+          </article>
+        </div>
+        <p class="punchline">Wakacje bez telefonu to skutek modelu — nie obietnica „AI zamiast Ciebie”.</p>
+      </section>
+
+      <section id="przebieg" aria-labelledby="przebieg-title">
+        <p class="section-label">Przebieg</p>
+        <h2 class="section-title" id="przebieg-title">Od briefu do działającego workflow</h2>
+        <p class="section-sub">Typowy start jednego workflow: około 3 dni — zgodnie z ofertą getStanley. Zaczynamy od modelu mentalnego jednego procesu.</p>
+        <div class="steps">
+          <article class="step">
+            <div class="num">01</div>
+            <h3>Brief</h3>
+            <p>Krótka rozmowa: który proces wyciągnąć z głowy jako pierwszy.</p>
+          </article>
+          <article class="step">
+            <div class="num">02</div>
+            <h3>Mapa + decyzje</h3>
+            <p>Kroki, reguły, wyjątki i lista decyzji człowieka.</p>
+          </article>
+          <article class="step">
+            <div class="num">03</div>
+            <h3>2–3 boty</h3>
+            <p>Role, reguły i eskalacje pod ten workflow.</p>
+          </article>
+          <article class="step">
+            <div class="num">04</div>
+            <h3>Trening w narzędziach</h3>
+            <p>Dopasowanie do Twoich aplikacji i standardu pracy.</p>
+          </article>
+          <article class="step">
+            <div class="num">05</div>
+            <h3>Przekazanie</h3>
+            <p>Start + check-iny jakości. Model iterujemy, gdy pojawią się luki.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="hitl" aria-labelledby="hitl-title">
+        <p class="section-label">Human in the Loop</p>
+        <h2 class="section-title" id="hitl-title">Bez HITL nie startujemy</h2>
+        <p class="section-sub">Model mentalny nie jest kompletny, dopóki nie ma jasnej granicy: co bot robi sam, a co zawsze wymaga Twojego OK.</p>
+        <div class="pillars">
+          <div class="pillar">
+            <div class="idx">Zawsze człowiek</div>
+            <h3>Płatności i wypłaty</h3>
+            <p>Żadnych przelewów ani zobowiązań finansowych bez Twojej zgody.</p>
+          </div>
+          <div class="pillar">
+            <div class="idx">Zawsze człowiek</div>
+            <h3>Wysyłki i obietnice</h3>
+            <p>Komunikaty do klienta i zobowiązania — po zatwierdzeniu.</p>
+          </div>
+          <div class="pillar">
+            <div class="idx">Zawsze człowiek</div>
+            <h3>Wyjątki</h3>
+            <p>Gdy reguła nie pasuje, bot eskaluje zamiast improwizować.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="dla-kogo" aria-labelledby="dla-kogo-title">
+        <p class="section-label">Dopasowanie</p>
+        <h2 class="section-title" id="dla-kogo-title">Dla kogo / dla kogo nie</h2>
+        <div class="fit-grid">
+          <article class="fit-card">
+            <h3>Pasuje, gdy</h3>
+            <ul>
+              <li>jesteś właścicielem firmy ~5–50 osób,</li>
+              <li>procesy trzymasz w głowie (albo w mailach i głowie),</li>
+              <li>chcesz oddać rutynę botom, a decyzje zostawić sobie.</li>
+            </ul>
+          </article>
+          <article class="fit-card no">
+            <h3>Nie pasuje, gdy</h3>
+            <ul>
+              <li>szukasz „AI zamiast decyzji” — bez Twojego udziału,</li>
+              <li>chcesz automatyzacji bez reguł i bez listy decyzji człowieka,</li>
+              <li>nie masz czasu na krótki brief o jednym procesie.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="pilot" aria-labelledby="pilot-title">
+        <p class="section-label">Pilotaż</p>
+        <h2 class="section-title" id="pilot-title">Pierwsze 10 firm — od modelu jednego procesu</h2>
+        <div class="pilot">
+          <p>Uruchamiamy pilotaż dla pierwszych 10 firm: wdrożenie jednego workflow w około 3 dni, na warunkach pilotażowych. Bez obietnic ROI — uczciwy test na jednym procesie. Pilotaż zaczyna się od modelu mentalnego tego procesu. Wejście: wypełnij formularz.</p>
+          <a class="btn-primary" href="#kontakt" data-lead-type="workflow_call">Zgłoś proces do modelu</a>
+        </div>
+      </section>
+
+      <section id="faq" aria-labelledby="faq-title">
+        <p class="section-label">FAQ</p>
+        <h2 class="section-title" id="faq-title">Częste pytania</h2>
+        <div class="faq">
+          <details>
+            <summary>Czy potrzebuję gotowej dokumentacji procesów?</summary>
+            <p class="ans">Nie. Model budujemy z rozmowy i tego, co masz w głowie. Dokumentacja nie jest warunkiem startu.</p>
+          </details>
+          <details>
+            <summary>Ile czasu zabierze mi to jako właścicielowi?</summary>
+            <p class="ans">Krótki brief i sesje mapowania jednego procesu — nie wielomiesięczny projekt. Tempo typowego startu jednego workflow: około 3 dni po ustaleniu zakresu.</p>
+          </details>
+          <details>
+            <summary>Czy bot zrobi coś nieodwracalnego bez mojej wiedzy?</summary>
+            <p class="ans">Nie. Płatności, wysyłki, obietnice wobec klienta i wyjątki wymagają zatwierdzenia człowieka. Bez HITL nie uruchamiamy modelu.</p>
+          </details>
+          <details>
+            <summary>Co, jeśli model będzie niekompletny?</summary>
+            <p class="ans">Bot eskaluje przy niepewności. Luki w modelu domykamy w kolejnych check-inach — iteracja jest częścią procesu, nie awarią.</p>
+          </details>
+        </div>
+      </section>
+    </div>
+
+    <section class="band cta-band" id="kontakt">
+      <div class="wrap">
+        <div class="cta-grid">
+          <div>
+            <p class="section-label">Kontakt</p>
+            <h2>Zgłoś proces, który chcesz wyjąć z głowy</h2>
+            <p>Wypełnij formularz. Zgłoszenie trafia do pipeline sprzedaży getStanley. Pierwszą odpowiedź (do ok. 1 godziny, także poza 8–17) przygotowuje nasz bot sprzedaży: potwierdza zgłoszenie i proponuje termin. Rozmowę prowadzi człowiek. Zespół getStanley pracuje pn–pt w godz. 8–17.</p>
+            <p style="margin:1rem 0 0;color:var(--muted);max-width:28rem;">Pełna oferta wdrożenia: <a class="inline-link" href="/pl/">getStanley /pl/</a></p>
+          </div>
+          <form class="lead-form" id="lead-form" novalidate>
+            <input type="hidden" name="source" id="source" value="mentalmodel" />
+            <div class="field">
+              <label for="lead_type">Cel zgłoszenia</label>
+              <select id="lead_type" name="lead_type" required>
+                <option value="workflow_call">Umówić rozmowę o modelu mentalnym</option>
+                <option value="bot_team">Zgłosić pomysł lub potrzebę</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="name">Imię i nazwisko</label>
+              <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="email">E-mail służbowy</label>
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" />
+            </div>
+            <div class="field">
+              <label for="company">Firma / organizacja</label>
+              <input id="company" name="company" type="text" autocomplete="organization" required maxlength="160" />
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="phone">Telefon <span style="opacity:.7">(opcjonalnie)</span></label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40" />
+              </div>
+              <div class="field">
+                <label for="website">Strona WWW <span style="opacity:.7">(opcjonalnie)</span></label>
+                <input id="website" name="website" type="url" autocomplete="url" maxlength="200" placeholder="https://" />
+              </div>
+            </div>
+            <div class="field" id="preferred_time_wrap">
+              <label for="preferred_time">Kiedy rozmawiamy? <span style="opacity:.7">(opcjonalnie)</span></label>
+              <input id="preferred_time" name="preferred_time" type="text" maxlength="160" placeholder="np. wtorek–czwartek po 14:00" />
+            </div>
+            <div class="field">
+              <label for="message">Wiadomość</label>
+              <textarea id="message" name="message" required maxlength="2000" placeholder="Jaki proces chcesz wyjąć z głowy?"></textarea>
+            </div>
+            <input class="hp" type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <button class="btn-primary" type="submit" id="lead-submit">Wyślij zgłoszenie</button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p class="footer-word" aria-hidden="true">getStanley</p>
+      <div class="footer-row">
+        <div>© <span id="y"></span> getStanley</div>
+        <div class="footer-links">
+          <a href="/pl/">Oferta getStanley</a>
+          <a href="/pl/#kontakt">Kontakt /pl/</a>
+          <span>Źródło: mentalmodel</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    // LOCALES — add new languages here
+    const LOCALES = [
+      { code: "pl", label: "Polski", path: "/mentalmodel/pl/" },
+      { code: "en", label: "English", path: "/mentalmodel/en/" }
+    ];
+
+    (function initLangSwitch() {
+      const root = document.querySelector(".lang-switch");
+      if (!root) return;
+      const current = root.getAttribute("data-locale") || "pl";
+      const btn = document.getElementById("lang-btn");
+      const menu = document.getElementById("lang-menu");
+      const currentLabel = root.querySelector(".lang-switch__current");
+      const cur = LOCALES.find(function (l) { return l.code === current; }) || LOCALES[0];
+      if (currentLabel) currentLabel.textContent = cur.label;
+
+      menu.innerHTML = "";
+      LOCALES.forEach(function (loc) {
+        const li = document.createElement("li");
+        li.setAttribute("role", "option");
+        const a = document.createElement("a");
+        a.href = loc.path;
+        a.textContent = loc.label;
+        a.setAttribute("role", "option");
+        if (loc.code === current) a.setAttribute("aria-current", "page");
+        a.addEventListener("click", function (ev) {
+          ev.preventDefault();
+          const hash = window.location.hash || "";
+          window.location.assign(loc.path + hash);
+        });
+        li.appendChild(a);
+        menu.appendChild(li);
+      });
+
+      function closeMenu() {
+        menu.hidden = true;
+        btn.setAttribute("aria-expanded", "false");
+      }
+      function openMenu() {
+        menu.hidden = false;
+        btn.setAttribute("aria-expanded", "true");
+      }
+      btn.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        if (menu.hidden) openMenu(); else closeMenu();
+      });
+      document.addEventListener("click", function () { closeMenu(); });
+      document.addEventListener("keydown", function (ev) {
+        if (ev.key === "Escape") closeMenu();
+      });
+      menu.addEventListener("click", function (ev) { ev.stopPropagation(); });
+    })();
+
+    const LEAD_ENDPOINT = "https://formsubmit.co/ajax/getstanley@agentmail.to";
+    const PAGE_SOURCE = "mentalmodel";
+
+    const form = document.getElementById("lead-form");
+    const statusEl = document.getElementById("form-status");
+    const submitBtn = document.getElementById("lead-submit");
+    const typeSelect = document.getElementById("lead_type");
+    const messageEl = document.getElementById("message");
+    const preferredWrap = document.getElementById("preferred_time_wrap");
+
+    const placeholders = {
+      bot_team: "Jaki pomysł lub potrzebę chcesz zgłosić?",
+      workflow_call: "Jaki proces chcesz wyjąć z głowy?"
+    };
+
+    const ctaLabels = {
+      bot_team: "Zgłoś pomysł lub potrzebę",
+      workflow_call: "Rozmowa o modelu mentalnym"
+    };
+
+    function syncLeadTypeUI() {
+      const t = typeSelect.value;
+      messageEl.placeholder = placeholders[t] || placeholders.workflow_call;
+      preferredWrap.hidden = t !== "workflow_call";
+      if (t !== "workflow_call") form.preferred_time.value = "";
+    }
+
+    typeSelect.addEventListener("change", syncLeadTypeUI);
+    syncLeadTypeUI();
+
+    document.querySelectorAll("[data-lead-type]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        const t = el.getAttribute("data-lead-type");
+        if (t) {
+          typeSelect.value = t;
+          syncLeadTypeUI();
+        }
+      });
+    });
+
+    form.addEventListener("submit", async function (ev) {
+      ev.preventDefault();
+      statusEl.textContent = "";
+      statusEl.className = "form-status";
+
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const company = form.company.value.trim();
+      const message = form.message.value.trim();
+      const leadType = form.lead_type.value;
+      const source = (form.source && form.source.value) ? form.source.value : PAGE_SOURCE;
+
+      if (!name || !email || !company || !message) {
+        statusEl.textContent = "Uzupełnij imię, e-mail, firmę i wiadomość.";
+        statusEl.classList.add("err");
+        return;
+      }
+
+      if (form.hp.value) {
+        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Pierwszą odpowiedź (do ok. 1 godziny, także poza 8–17) przygotuje bot sprzedaży; rozmowę prowadzi człowiek. Zespół pracuje pn–pt w godz. 8–17.";
+        statusEl.classList.add("ok");
+        form.reset();
+        form.source.value = PAGE_SOURCE;
+        syncLeadTypeUI();
+        return;
+      }
+
+      const phone = form.phone.value.trim();
+      const website = form.website.value.trim();
+      const preferredTime = leadType === "workflow_call" ? form.preferred_time.value.trim() : "";
+      const pageUrl = window.location.href.split("#")[0];
+      const submittedAt = new Date().toISOString();
+      const ctaLabel = ctaLabels[leadType] || ctaLabels.workflow_call;
+      const bodyLines = [
+        "Imię: " + name,
+        "Email: " + email,
+        "Telefon: " + phone,
+        "Firma: " + company,
+        "CTA: " + ctaLabel,
+        "Wiadomość: " + message,
+        preferredTime ? ("Preferowany termin rozmowy: " + preferredTime) : "",
+        website ? ("WWW leada: " + website) : "",
+        "Strona: " + pageUrl,
+        "Czas: " + submittedAt,
+        "lead_type: " + leadType,
+        "source: " + source
+      ].filter(Boolean).join("\n");
+
+      const payload = {
+        name: name,
+        email: email,
+        company: company,
+        phone: phone,
+        website: website,
+        preferred_time: preferredTime,
+        source: source,
+        message: bodyLines,
+        _subject: "[Lead] mentalmodel · " + ctaLabel + " — " + name + " / " + company,
+        _replyto: email,
+        _template: "box",
+        _captcha: "false",
+        _autoresponse: "Dziękujemy — getStanley otrzymał Twoje zgłoszenie z strony modelu mentalnego. Pierwszą odpowiedź (do ok. 1 godziny, także poza 8–17) przygotowuje nasz bot sprzedaży: potwierdza zgłoszenie i proponuje termin. Rozmowę prowadzi człowiek. Zespół getStanley pracuje pn–pt w godz. 8–17. Model mentalny: https://stanleyagent.github.io/mentalmodel/pl/ · Oferta: https://stanleyagent.github.io/pl/"
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Wysyłanie…";
+
+      try {
+        const res = await fetch(LEAD_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+        var data = null;
+        try { data = await res.json(); } catch (_) {}
+        if (!res.ok || (data && data.success === "false")) throw new Error("bad status");
+        form.reset();
+        form.source.value = PAGE_SOURCE;
+        syncLeadTypeUI();
+        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Pierwszą odpowiedź (do ok. 1 godziny, także poza 8–17) przygotuje bot sprzedaży; rozmowę prowadzi człowiek. Zespół pracuje pn–pt w godz. 8–17.";
+        statusEl.classList.add("ok");
+      } catch (err) {
+        statusEl.textContent = "Nie udało się wysłać. Spróbuj ponownie za chwilę.";
+        statusEl.classList.add("err");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Wyślij zgłoszenie";
+      }
+    });
+  </script>
+</body>
+</html>
