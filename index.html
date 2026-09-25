@@ -18,6 +18,7 @@
       --accent-2: #6ea8ff;
       --line: rgba(232, 238, 248, 0.12);
       --radius: 18px;
+      --danger: #ff8a8a;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -47,7 +48,7 @@
       .hero { grid-template-columns: 1.25fr 0.85fr; align-items: end; }
     }
     .eyebrow {
-      display: inline-block; padding: 0.35rem 0.75rem; border: 1px solid var(--line);
+      display: inline-flex; padding: 0.35rem 0.75rem; border: 1px solid var(--line);
       border-radius: 999px; color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem;
       background: rgba(255,255,255,0.03);
     }
@@ -58,11 +59,13 @@
     }
     .lede { font-size: 1.15rem; color: var(--muted); max-width: 40rem; margin: 0 0 1.75rem; }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
-    .btn-primary {
-      display: inline-flex; padding: 0.9rem 1.25rem; border-radius: 12px;
+    .btn-primary, button.btn-primary {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.9rem 1.25rem; border-radius: 12px; border: none; cursor: pointer;
       background: linear-gradient(135deg, var(--accent), #2bb8a9);
-      color: #061018; font-weight: 700; text-decoration: none;
+      color: #061018; font-weight: 700; text-decoration: none; font: inherit;
     }
+    .btn-primary:disabled { opacity: 0.6; cursor: wait; }
     .btn-ghost {
       display: inline-flex; padding: 0.9rem 1.25rem; border-radius: 12px;
       border: 1px solid var(--line); text-decoration: none; color: var(--text);
@@ -108,17 +111,34 @@
       margin: 1rem 0 3rem; padding: 2rem;
       border-radius: calc(var(--radius) + 4px); border: 1px solid var(--line);
       background: linear-gradient(135deg, rgba(61,214,198,0.12), rgba(110,168,255,0.1)), var(--bg-card);
-      display: grid; gap: 1rem;
+      display: grid; gap: 1.5rem;
     }
-    @media (min-width: 760px) {
-      .cta-band { grid-template-columns: 1.4fr auto; align-items: center; }
+    @media (min-width: 860px) {
+      .cta-band { grid-template-columns: 0.95fr 1.05fr; align-items: start; }
     }
     .cta-band h2 {
       margin: 0 0 0.4rem; font-family: "Instrument Serif", Georgia, serif;
       font-weight: 400; font-size: 1.9rem;
     }
-    .cta-band p { margin: 0; color: var(--muted); }
-    .cta-actions { display: flex; flex-direction: column; gap: 0.6rem; }
+    .cta-band > div > p { margin: 0; color: var(--muted); }
+    form.lead-form { display: grid; gap: 0.85rem; }
+    .field { display: grid; gap: 0.35rem; }
+    .field label { font-size: 0.88rem; color: var(--muted); }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 0.75rem 0.85rem; border-radius: 10px;
+      border: 1px solid var(--line); background: rgba(6,16,24,0.55);
+      color: var(--text); font: inherit;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: 2px solid rgba(61,214,198,0.45); border-color: transparent;
+    }
+    .field textarea { min-height: 110px; resize: vertical; }
+    .row2 { display: grid; gap: 0.85rem; }
+    @media (min-width: 560px) { .row2 { grid-template-columns: 1fr 1fr; } }
+    .hp { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; overflow: hidden; }
+    .form-status { margin: 0; font-size: 0.92rem; min-height: 1.3em; }
+    .form-status.ok { color: var(--accent); }
+    .form-status.err { color: var(--danger); }
     footer {
       border-top: 1px solid var(--line); padding: 1.5rem 0 2.5rem; color: var(--muted);
       font-size: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem;
@@ -130,7 +150,7 @@
   <div class="wrap">
     <header>
       <div class="brand">getStanley</div>
-      <a class="nav-cta" href="mailto:getstanley@agentmail.to?subject=Zesp%C3%B3%C5%82%20bot%C3%B3w%20%E2%80%94%20pierwszy%20workflow">Zamów zespół botów</a>
+      <a class="nav-cta" href="#kontakt" data-lead-type="bot_team">Zamów zespół botów</a>
     </header>
 
     <main>
@@ -140,13 +160,13 @@
           <h1>getStanley buduje boty, które przejmują powtarzalną pracę</h1>
           <p class="lede">Małe, nazwane role zamiast jednego „zrób wszystko”. Trening pod Twój standard, podłączenie do narzędzi, w których praca już żyje, i odpowiedzialne działanie: bot działa w ramach reguł — Ty zatwierdzasz wysyłki, płatności i wszystko nieodwracalne.</p>
           <div class="hero-actions">
-            <a class="btn-primary" href="mailto:getstanley@agentmail.to?subject=Zesp%C3%B3%C5%82%20bot%C3%B3w%20%E2%80%94%20pierwszy%20workflow">Zamów zespół botów</a>
-            <a class="btn-ghost" href="mailto:getstanley@agentmail.to?subject=Rozmowa%20o%20pierwszym%20workflow">Umów rozmowę o pierwszym workflow</a>
+            <a class="btn-primary" href="#kontakt" data-lead-type="bot_team">Zamów zespół botów</a>
+            <a class="btn-ghost" href="#kontakt" data-lead-type="workflow_call">Umów rozmowę o pierwszym workflow</a>
           </div>
         </div>
         <aside class="panel">
           <h2>Dla kogo</h2>
-          <p>Dla właścicieli i operatorów firm, którzy wiedzą, które zadania zjadają tydzień — i chcą je robić konsekwentnie, bez oddawania decyzji strategicznych ani wysokiego ryzyka botom.</p>
+          <p>Dla właścicieli i operatorów firm, którzy wiedzą, które procesy zjadają tydzień — i chcą je robić konsekwentnie, bez oddawania decyzji strategicznych ani wysokiego ryzyka botom.</p>
           <div class="who"><strong>Typowy start:</strong> 2–3 boty na jeden workflow, live w ok. 1–2 tygodnie.</div>
         </aside>
       </section>
@@ -212,20 +232,183 @@
       <section class="cta-band" id="kontakt">
         <div>
           <h2>Zacznij od jednego workflow</h2>
-          <p>Napisz na <a href="mailto:getstanley@agentmail.to">getstanley@agentmail.to</a> — ustalimy pierwszy zespół botów pod realną pracę w Twojej firmie.</p>
+          <p>Wypełnij formularz — zgłoszenie trafi do pipeline’u sprzedaży getStanley. Odezwiemy się w 1–2 dni robocze.</p>
         </div>
-        <div class="cta-actions">
-          <a class="btn-primary" href="mailto:getstanley@agentmail.to?subject=Zesp%C3%B3%C5%82%20bot%C3%B3w%20%E2%80%94%20pierwszy%20workflow">Zamów zespół botów</a>
-          <a class="btn-ghost" href="mailto:getstanley@agentmail.to?subject=Rozmowa%20o%20pierwszym%20workflow">Umów rozmowę</a>
-        </div>
+        <form class="lead-form" id="lead-form" novalidate>
+          <div class="field">
+            <label for="lead_type">Chcę</label>
+            <select id="lead_type" name="lead_type" required>
+              <option value="bot_team">Zamówić zespół botów</option>
+              <option value="workflow_call">Umówić rozmowę o pierwszym workflow</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="name">Imię i nazwisko</label>
+            <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" />
+          </div>
+          <div class="field">
+            <label for="company">Firma / organizacja</label>
+            <input id="company" name="company" type="text" autocomplete="organization" required maxlength="160" />
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="phone">Telefon <span style="opacity:.7">(opcjonalnie)</span></label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40" />
+            </div>
+            <div class="field">
+              <label for="website">Strona WWW <span style="opacity:.7">(opcjonalnie)</span></label>
+              <input id="website" name="website" type="url" autocomplete="url" maxlength="200" placeholder="https://" />
+            </div>
+          </div>
+          <div class="field" id="preferred_time_wrap" hidden>
+            <label for="preferred_time">Kiedy rozmawiamy? <span style="opacity:.7">(opcjonalnie)</span></label>
+            <input id="preferred_time" name="preferred_time" type="text" maxlength="160" placeholder="np. wtorek–czwartek po 14:00" />
+          </div>
+          <div class="field">
+            <label for="message">Wiadomość</label>
+            <textarea id="message" name="message" required maxlength="2000" placeholder="Jakie boty / procesy chcesz zautomatyzować?"></textarea>
+          </div>
+          <input class="hp" type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <button class="btn-primary" type="submit" id="lead-submit">Wyślij zgłoszenie</button>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
       </section>
     </main>
 
     <footer>
       <div>© <span id="y"></span> getStanley</div>
-      <div><a href="mailto:getstanley@agentmail.to">getstanley@agentmail.to</a></div>
+      <div>Leady: formularz powyżej</div>
     </footer>
   </div>
-  <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    const LEAD_ENDPOINT = "https://formsubmit.co/ajax/getstanley@agentmail.to";
+
+    const form = document.getElementById("lead-form");
+    const statusEl = document.getElementById("form-status");
+    const submitBtn = document.getElementById("lead-submit");
+    const typeSelect = document.getElementById("lead_type");
+    const messageEl = document.getElementById("message");
+    const preferredWrap = document.getElementById("preferred_time_wrap");
+
+    const placeholders = {
+      bot_team: "Jakie boty / procesy chcesz zautomatyzować?",
+      workflow_call: "Jaki pierwszy workflow chcesz omówić?"
+    };
+
+    function syncLeadTypeUI() {
+      const t = typeSelect.value;
+      messageEl.placeholder = placeholders[t] || placeholders.bot_team;
+      preferredWrap.hidden = t !== "workflow_call";
+      if (t !== "workflow_call") form.preferred_time.value = "";
+    }
+
+    typeSelect.addEventListener("change", syncLeadTypeUI);
+    syncLeadTypeUI();
+
+    document.querySelectorAll("[data-lead-type]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        const t = el.getAttribute("data-lead-type");
+        if (t) {
+          typeSelect.value = t;
+          syncLeadTypeUI();
+        }
+      });
+    });
+
+    form.addEventListener("submit", async function (ev) {
+      ev.preventDefault();
+      statusEl.textContent = "";
+      statusEl.className = "form-status";
+
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const company = form.company.value.trim();
+      const message = form.message.value.trim();
+      const leadType = form.lead_type.value;
+
+      if (!name || !email || !company || !message) {
+        statusEl.textContent = "Uzupełnij imię, email, firmę i wiadomość.";
+        statusEl.classList.add("err");
+        return;
+      }
+
+      if (form.hp.value) {
+        statusEl.textContent = "Dzięki — zgłoszenie poszło do getStanley. Odezwiemy się w 1–2 dni robocze.";
+        statusEl.classList.add("ok");
+        form.reset();
+        syncLeadTypeUI();
+        return;
+      }
+
+      const phone = form.phone.value.trim();
+      const website = form.website.value.trim();
+      const preferredTime = leadType === "workflow_call" ? form.preferred_time.value.trim() : "";
+      const pageUrl = window.location.href.split("#")[0];
+      const submittedAt = new Date().toISOString();
+      const ctaLabel = leadType === "bot_team" ? "Zamów zespół botów" : "Umów rozmowę";
+      const bodyLines = [
+        "Imię: " + name,
+        "Email: " + email,
+        "Telefon: " + phone,
+        "Firma: " + company,
+        "CTA: " + ctaLabel,
+        "Wiadomość: " + message,
+        preferredTime ? ("Preferowany termin rozmowy: " + preferredTime) : "",
+        website ? ("WWW leada: " + website) : "",
+        "Strona: " + pageUrl,
+        "Czas: " + submittedAt,
+        "lead_type: " + leadType,
+        "source: landing_getstanley"
+      ].filter(Boolean).join("\n");
+
+      const payload = {
+        name: name,
+        email: email,
+        company: company,
+        phone: phone,
+        website: website,
+        preferred_time: preferredTime,
+        message: bodyLines,
+        _subject: "[Lead] " + ctaLabel + " — " + name + " / " + company,
+        _replyto: email,
+        _template: "box",
+        _captcha: "false",
+        _autoresponse: "Dzięki — getStanley dostał Twoje zgłoszenie. Odezwiemy się w ciągu 1–2 dni roboczych. Oferta: https://stanleyagent.github.io/"
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Wysyłanie…";
+
+      try {
+        const res = await fetch(LEAD_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+        var data = null;
+        try { data = await res.json(); } catch (_) {}
+        if (!res.ok || (data && data.success === "false")) throw new Error("bad status");
+        form.reset();
+        syncLeadTypeUI();
+        statusEl.textContent = "Dzięki — zgłoszenie poszło do getStanley. Odezwiemy się w 1–2 dni robocze.";
+        statusEl.classList.add("ok");
+      } catch (err) {
+        statusEl.textContent = "Nie udało się wysłać. Spróbuj ponownie za chwilę.";
+        statusEl.classList.add("err");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Wyślij zgłoszenie";
+      }
+    });
+  </script>
 </body>
 </html>
