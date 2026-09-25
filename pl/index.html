@@ -548,3 +548,277 @@
           </article>
         </div>
       </section>
+
+      <section>
+        <p class="section-label">Proces</p>
+        <h2 class="section-title">Przebieg współpracy</h2>
+        <p class="section-sub">Od uzgodnienia zakresu do przekazania działającego workflow — z eskalacją i nadzorem jakości.</p>
+        <div class="steps">
+          <article class="step"><div class="num">01</div><h3>Zakres</h3><p>Ustalenie procesów do przejęcia.</p></article>
+          <article class="step"><div class="num">02</div><h3>Role</h3><p>Definicja małych, nazwanych botów.</p></article>
+          <article class="step"><div class="num">03</div><h3>Trening</h3><p>Dopasowanie do Twojego standardu pracy.</p></article>
+          <article class="step"><div class="num">04</div><h3>Wdrożenie</h3><p>Integracja z narzędziami Twojej firmy.</p></article>
+          <article class="step"><div class="num">05</div><h3>Przekazanie</h3><p>Eskalacja, zatwierdzenia i nadzór jakości.</p></article>
+        </div>
+      </section>
+
+      <section>
+        <p class="section-label">Przed startem</p>
+        <h2 class="section-title">Co ustalasz przed startem</h2>
+        <p class="section-sub">Bez obiecanek ROI — konkretny zakres, zanim bot ruszy w Twoich narzędziach.</p>
+        <ul class="checklist">
+          <li><span class="tick">✓</span><span>Mapa jednego workflow i lista decyzji, które zostają po Twojej stronie</span></li>
+          <li><span class="tick">✓</span><span>Nazwane role botów z zakresem i regułami działania</span></li>
+          <li><span class="tick">✓</span><span>Punkty eskalacji: kiedy bot pyta zamiast działać na domysłach</span></li>
+          <li><span class="tick">✓</span><span>Plan integracji z narzędziami, z których już korzystasz</span></li>
+          <li><span class="tick">✓</span><span>Kryteria ukończenia oraz check-iny jakości po przekazaniu</span></li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="band cta-band" id="kontakt">
+      <div class="wrap">
+        <div class="cta-grid">
+          <div>
+            <p class="section-label">Kontakt</p>
+            <h2>Omów pierwszy workflow</h2>
+            <p>Wypełnij formularz. Zgłoszenie trafia do pipeline sprzedaży getStanley — odpowiadamy w ciągu 1 godziny (7 dni w tygodniu, 24 godziny). Jedynie w przypadku decyzji wymagających człowieka po stronie zespołu getStanley czas odpowiedzi może ulec wydłużeniu. Zespół getStanley pracuje od poniedziałku do piątku w godzinach 8–17.</p>
+          </div>
+          <form class="lead-form" id="lead-form" novalidate>
+            <div class="field">
+              <label for="lead_type">Cel zgłoszenia</label>
+              <select id="lead_type" name="lead_type" required>
+                <option value="bot_team">Zgłosić pomysł lub potrzebę</option>
+                <option value="workflow_call">Umówić rozmowę o możliwościach wdrożenia</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="name">Imię i nazwisko</label>
+              <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="email">E-mail służbowy</label>
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" />
+            </div>
+            <div class="field">
+              <label for="company">Firma / organizacja</label>
+              <input id="company" name="company" type="text" autocomplete="organization" required maxlength="160" />
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="phone">Telefon <span style="opacity:.7">(opcjonalnie)</span></label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40" />
+              </div>
+              <div class="field">
+                <label for="website">Strona WWW <span style="opacity:.7">(opcjonalnie)</span></label>
+                <input id="website" name="website" type="url" autocomplete="url" maxlength="200" placeholder="https://" />
+              </div>
+            </div>
+            <div class="field" id="preferred_time_wrap" hidden>
+              <label for="preferred_time">Kiedy rozmawiamy? <span style="opacity:.7">(opcjonalnie)</span></label>
+              <input id="preferred_time" name="preferred_time" type="text" maxlength="160" placeholder="np. wtorek–czwartek po 14:00" />
+            </div>
+            <div class="field">
+              <label for="message">Wiadomość</label>
+              <textarea id="message" name="message" required maxlength="2000" placeholder="Jaki pomysł lub potrzebę chcesz zgłosić?"></textarea>
+            </div>
+            <input class="hp" type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <button class="btn-primary" type="submit" id="lead-submit">Wyślij zgłoszenie</button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p class="footer-word" aria-hidden="true">getStanley</p>
+      <div class="footer-row">
+        <div>© <span id="y"></span> getStanley</div>
+        <div>Leady: formularz powyżej</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    // LOCALES — add new languages here
+    const LOCALES = [
+      { code: "pl", label: "Polski", path: "/pl/" },
+      { code: "en", label: "English", path: "/en/" }
+    ];
+
+    (function initLangSwitch() {
+      const root = document.querySelector(".lang-switch");
+      if (!root) return;
+      const current = root.getAttribute("data-locale") || "pl";
+      const btn = document.getElementById("lang-btn");
+      const menu = document.getElementById("lang-menu");
+      const currentLabel = root.querySelector(".lang-switch__current");
+      const cur = LOCALES.find(function (l) { return l.code === current; }) || LOCALES[0];
+      if (currentLabel) currentLabel.textContent = cur.label;
+
+      menu.innerHTML = "";
+      LOCALES.forEach(function (loc) {
+        const li = document.createElement("li");
+        li.setAttribute("role", "option");
+        const a = document.createElement("a");
+        a.href = loc.path;
+        a.textContent = loc.label;
+        a.setAttribute("role", "option");
+        if (loc.code === current) a.setAttribute("aria-current", "page");
+        a.addEventListener("click", function (ev) {
+          ev.preventDefault();
+          const hash = window.location.hash || "";
+          window.location.assign(loc.path + hash);
+        });
+        li.appendChild(a);
+        menu.appendChild(li);
+      });
+
+      function closeMenu() {
+        menu.hidden = true;
+        btn.setAttribute("aria-expanded", "false");
+      }
+      function openMenu() {
+        menu.hidden = false;
+        btn.setAttribute("aria-expanded", "true");
+      }
+      btn.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        if (menu.hidden) openMenu(); else closeMenu();
+      });
+      document.addEventListener("click", function () { closeMenu(); });
+      document.addEventListener("keydown", function (ev) {
+        if (ev.key === "Escape") closeMenu();
+      });
+      menu.addEventListener("click", function (ev) { ev.stopPropagation(); });
+    })();
+
+    const LEAD_ENDPOINT = "https://formsubmit.co/ajax/getstanley@agentmail.to";
+
+    const form = document.getElementById("lead-form");
+    const statusEl = document.getElementById("form-status");
+    const submitBtn = document.getElementById("lead-submit");
+    const typeSelect = document.getElementById("lead_type");
+    const messageEl = document.getElementById("message");
+    const preferredWrap = document.getElementById("preferred_time_wrap");
+
+    const placeholders = {
+      bot_team: "Jaki pomysł lub potrzebę chcesz zgłosić?",
+      workflow_call: "Jakie możliwości wdrożenia chcesz omówić?"
+    };
+
+    function syncLeadTypeUI() {
+      const t = typeSelect.value;
+      messageEl.placeholder = placeholders[t] || placeholders.bot_team;
+      preferredWrap.hidden = t !== "workflow_call";
+      if (t !== "workflow_call") form.preferred_time.value = "";
+    }
+
+    typeSelect.addEventListener("change", syncLeadTypeUI);
+    syncLeadTypeUI();
+
+    document.querySelectorAll("[data-lead-type]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        const t = el.getAttribute("data-lead-type");
+        if (t) {
+          typeSelect.value = t;
+          syncLeadTypeUI();
+        }
+      });
+    });
+
+    form.addEventListener("submit", async function (ev) {
+      ev.preventDefault();
+      statusEl.textContent = "";
+      statusEl.className = "form-status";
+
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const company = form.company.value.trim();
+      const message = form.message.value.trim();
+      const leadType = form.lead_type.value;
+
+      if (!name || !email || !company || !message) {
+        statusEl.textContent = "Uzupełnij imię, e-mail, firmę i wiadomość.";
+        statusEl.classList.add("err");
+        return;
+      }
+
+      if (form.hp.value) {
+        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Odpowiemy w ciągu 1 godziny (z zastrzeżeniem decyzji po stronie zespołu).";
+        statusEl.classList.add("ok");
+        form.reset();
+        syncLeadTypeUI();
+        return;
+      }
+
+      const phone = form.phone.value.trim();
+      const website = form.website.value.trim();
+      const preferredTime = leadType === "workflow_call" ? form.preferred_time.value.trim() : "";
+      const pageUrl = window.location.href.split("#")[0];
+      const submittedAt = new Date().toISOString();
+      const ctaLabel = leadType === "bot_team" ? "Zgłoś pomysł lub potrzebę" : "Umów rozmowę o możliwościach wdrożenia";
+      const bodyLines = [
+        "Imię: " + name,
+        "Email: " + email,
+        "Telefon: " + phone,
+        "Firma: " + company,
+        "CTA: " + ctaLabel,
+        "Wiadomość: " + message,
+        preferredTime ? ("Preferowany termin rozmowy: " + preferredTime) : "",
+        website ? ("WWW leada: " + website) : "",
+        "Strona: " + pageUrl,
+        "Czas: " + submittedAt,
+        "lead_type: " + leadType,
+        "source: landing_getstanley"
+      ].filter(Boolean).join("\n");
+
+      const payload = {
+        name: name,
+        email: email,
+        company: company,
+        phone: phone,
+        website: website,
+        preferred_time: preferredTime,
+        message: bodyLines,
+        _subject: "[Lead] " + ctaLabel + " — " + name + " / " + company,
+        _replyto: email,
+        _template: "box",
+        _captcha: "false",
+        _autoresponse: "Dziękujemy — getStanley otrzymał Twoje zgłoszenie. Odpowiadamy w ciągu 1 godziny (7/24); przy decyzjach wymagających człowieka po naszej stronie czas może się wydłużyć. Zespół pracuje pn–pt 8–17. Oferta: https://stanleyagent.github.io/pl/"
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Wysyłanie…";
+
+      try {
+        const res = await fetch(LEAD_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+        var data = null;
+        try { data = await res.json(); } catch (_) {}
+        if (!res.ok || (data && data.success === "false")) throw new Error("bad status");
+        form.reset();
+        syncLeadTypeUI();
+        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Odpowiemy w ciągu 1 godziny (z zastrzeżeniem decyzji po stronie zespołu).";
+        statusEl.classList.add("ok");
+      } catch (err) {
+        statusEl.textContent = "Nie udało się wysłać. Spróbuj ponownie za chwilę.";
+        statusEl.classList.add("err");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Wyślij zgłoszenie";
+      }
+    });
+  </script>
+</body>
+</html>

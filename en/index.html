@@ -548,3 +548,277 @@
           </article>
         </div>
       </section>
+
+      <section>
+        <p class="section-label">Process</p>
+        <h2 class="section-title">How collaboration works</h2>
+        <p class="section-sub">From agreeing scope to handing over a working workflow — with escalation and quality oversight.</p>
+        <div class="steps">
+          <article class="step"><div class="num">01</div><h3>Scope</h3><p>Agree which processes to take over.</p></article>
+          <article class="step"><div class="num">02</div><h3>Roles</h3><p>Define small, named bots.</p></article>
+          <article class="step"><div class="num">03</div><h3>Training</h3><p>Fit to your working standard.</p></article>
+          <article class="step"><div class="num">04</div><h3>Deployment</h3><p>Integrate with your company's tools.</p></article>
+          <article class="step"><div class="num">05</div><h3>Handover</h3><p>Escalation, approvals, and quality oversight.</p></article>
+        </div>
+      </section>
+
+      <section>
+        <p class="section-label">Before kickoff</p>
+        <h2 class="section-title">What you settle before kickoff</h2>
+        <p class="section-sub">No ROI promises — a concrete scope before a bot runs in your tools.</p>
+        <ul class="checklist">
+          <li><span class="tick">✓</span><span>Map of one workflow and a list of decisions that stay on your side</span></li>
+          <li><span class="tick">✓</span><span>Named bot roles with scope and operating rules</span></li>
+          <li><span class="tick">✓</span><span>Escalation points: when the bot asks instead of acting on guesses</span></li>
+          <li><span class="tick">✓</span><span>Integration plan with the tools you already use</span></li>
+          <li><span class="tick">✓</span><span>Done criteria and quality check-ins after handover</span></li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="band cta-band" id="kontakt">
+      <div class="wrap">
+        <div class="cta-grid">
+          <div>
+            <p class="section-label">Contact</p>
+            <h2>Discuss the first workflow</h2>
+            <p>Fill in the form. Your submission goes into the getStanley sales pipeline — we reply within 1 hour (7 days a week, 24 hours). Only when a decision requires a human on the getStanley team side may response time be longer. The getStanley team works Monday–Friday, 8:00–17:00 (Europe/Warsaw).</p>
+          </div>
+          <form class="lead-form" id="lead-form" novalidate>
+            <div class="field">
+              <label for="lead_type">Purpose of inquiry</label>
+              <select id="lead_type" name="lead_type" required>
+                <option value="bot_team">Share an idea or need</option>
+                <option value="workflow_call">Book a call about implementation options</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="name">Full name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="email">Work email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" />
+            </div>
+            <div class="field">
+              <label for="company">Company / organization</label>
+              <input id="company" name="company" type="text" autocomplete="organization" required maxlength="160" />
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="phone">Phone <span style="opacity:.7">(optional)</span></label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40" />
+              </div>
+              <div class="field">
+                <label for="website">Website <span style="opacity:.7">(optional)</span></label>
+                <input id="website" name="website" type="url" autocomplete="url" maxlength="200" placeholder="https://" />
+              </div>
+            </div>
+            <div class="field" id="preferred_time_wrap" hidden>
+              <label for="preferred_time">When should we talk? <span style="opacity:.7">(optional)</span></label>
+              <input id="preferred_time" name="preferred_time" type="text" maxlength="160" placeholder="e.g. Tue–Thu after 14:00" />
+            </div>
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" required maxlength="2000" placeholder="What idea or need would you like to share?"></textarea>
+            </div>
+            <input class="hp" type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <button class="btn-primary" type="submit" id="lead-submit">Send inquiry</button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p class="footer-word" aria-hidden="true">getStanley</p>
+      <div class="footer-row">
+        <div>© <span id="y"></span> getStanley</div>
+        <div>Leads: form above</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    // LOCALES — add new languages here
+    const LOCALES = [
+      { code: "pl", label: "Polski", path: "/pl/" },
+      { code: "en", label: "English", path: "/en/" }
+    ];
+
+    (function initLangSwitch() {
+      const root = document.querySelector(".lang-switch");
+      if (!root) return;
+      const current = root.getAttribute("data-locale") || "pl";
+      const btn = document.getElementById("lang-btn");
+      const menu = document.getElementById("lang-menu");
+      const currentLabel = root.querySelector(".lang-switch__current");
+      const cur = LOCALES.find(function (l) { return l.code === current; }) || LOCALES[0];
+      if (currentLabel) currentLabel.textContent = cur.label;
+
+      menu.innerHTML = "";
+      LOCALES.forEach(function (loc) {
+        const li = document.createElement("li");
+        li.setAttribute("role", "option");
+        const a = document.createElement("a");
+        a.href = loc.path;
+        a.textContent = loc.label;
+        a.setAttribute("role", "option");
+        if (loc.code === current) a.setAttribute("aria-current", "page");
+        a.addEventListener("click", function (ev) {
+          ev.preventDefault();
+          const hash = window.location.hash || "";
+          window.location.assign(loc.path + hash);
+        });
+        li.appendChild(a);
+        menu.appendChild(li);
+      });
+
+      function closeMenu() {
+        menu.hidden = true;
+        btn.setAttribute("aria-expanded", "false");
+      }
+      function openMenu() {
+        menu.hidden = false;
+        btn.setAttribute("aria-expanded", "true");
+      }
+      btn.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        if (menu.hidden) openMenu(); else closeMenu();
+      });
+      document.addEventListener("click", function () { closeMenu(); });
+      document.addEventListener("keydown", function (ev) {
+        if (ev.key === "Escape") closeMenu();
+      });
+      menu.addEventListener("click", function (ev) { ev.stopPropagation(); });
+    })();
+
+    const LEAD_ENDPOINT = "https://formsubmit.co/ajax/getstanley@agentmail.to";
+
+    const form = document.getElementById("lead-form");
+    const statusEl = document.getElementById("form-status");
+    const submitBtn = document.getElementById("lead-submit");
+    const typeSelect = document.getElementById("lead_type");
+    const messageEl = document.getElementById("message");
+    const preferredWrap = document.getElementById("preferred_time_wrap");
+
+    const placeholders = {
+      bot_team: "What idea or need would you like to share?",
+      workflow_call: "What implementation options would you like to discuss?"
+    };
+
+    function syncLeadTypeUI() {
+      const t = typeSelect.value;
+      messageEl.placeholder = placeholders[t] || placeholders.bot_team;
+      preferredWrap.hidden = t !== "workflow_call";
+      if (t !== "workflow_call") form.preferred_time.value = "";
+    }
+
+    typeSelect.addEventListener("change", syncLeadTypeUI);
+    syncLeadTypeUI();
+
+    document.querySelectorAll("[data-lead-type]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        const t = el.getAttribute("data-lead-type");
+        if (t) {
+          typeSelect.value = t;
+          syncLeadTypeUI();
+        }
+      });
+    });
+
+    form.addEventListener("submit", async function (ev) {
+      ev.preventDefault();
+      statusEl.textContent = "";
+      statusEl.className = "form-status";
+
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const company = form.company.value.trim();
+      const message = form.message.value.trim();
+      const leadType = form.lead_type.value;
+
+      if (!name || !email || !company || !message) {
+        statusEl.textContent = "Please fill in name, email, company, and message.";
+        statusEl.classList.add("err");
+        return;
+      }
+
+      if (form.hp.value) {
+        statusEl.textContent = "Thank you — your inquiry reached getStanley. We will reply within 1 hour (subject to decisions on our team's side).";
+        statusEl.classList.add("ok");
+        form.reset();
+        syncLeadTypeUI();
+        return;
+      }
+
+      const phone = form.phone.value.trim();
+      const website = form.website.value.trim();
+      const preferredTime = leadType === "workflow_call" ? form.preferred_time.value.trim() : "";
+      const pageUrl = window.location.href.split("#")[0];
+      const submittedAt = new Date().toISOString();
+      const ctaLabel = leadType === "bot_team" ? "Share an idea or need" : "Book a call about implementation options";
+      const bodyLines = [
+        "Name: " + name,
+        "Email: " + email,
+        "Phone: " + phone,
+        "Company: " + company,
+        "CTA: " + ctaLabel,
+        "Message: " + message,
+        preferredTime ? ("Preferred call time: " + preferredTime) : "",
+        website ? ("Lead website: " + website) : "",
+        "Page: " + pageUrl,
+        "Time: " + submittedAt,
+        "lead_type: " + leadType,
+        "source: landing_getstanley"
+      ].filter(Boolean).join("\n");
+
+      const payload = {
+        name: name,
+        email: email,
+        company: company,
+        phone: phone,
+        website: website,
+        preferred_time: preferredTime,
+        message: bodyLines,
+        _subject: "[Lead] " + ctaLabel + " — " + name + " / " + company,
+        _replyto: email,
+        _template: "box",
+        _captcha: "false",
+        _autoresponse: "Thank you — getStanley received your inquiry. We reply within 1 hour (24/7); when a decision requires a human on our side, response time may be longer. The team works Mon–Fri 8:00–17:00 (Europe/Warsaw). Offer: https://stanleyagent.github.io/en/"
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending…";
+
+      try {
+        const res = await fetch(LEAD_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+        var data = null;
+        try { data = await res.json(); } catch (_) {}
+        if (!res.ok || (data && data.success === "false")) throw new Error("bad status");
+        form.reset();
+        syncLeadTypeUI();
+        statusEl.textContent = "Thank you — your inquiry reached getStanley. We will reply within 1 hour (subject to decisions on our team's side).";
+        statusEl.classList.add("ok");
+      } catch (err) {
+        statusEl.textContent = "Could not send. Please try again in a moment.";
+        statusEl.classList.add("err");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send inquiry";
+      }
+    });
+  </script>
+</body>
+</html>
