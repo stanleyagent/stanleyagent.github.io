@@ -3,187 +3,428 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>getStanley — trening i wdrożenie botów-pracowników AI</title>
-  <meta name="description" content="Trenujemy i wdrażamy zespoły botów-pracowników AI do powtarzalnej pracy — z regułami, zatwierdzeniem człowieka przy działaniach wysokiego ryzyka oraz jasną eskalacją." />
+  <title>getStanley — zespoły botów-pracowników AI</title>
+  <meta name="description" content="Budujemy i wdrażamy zespoły botów AI, które przejmują powtarzalną pracę — z jasnymi zasadami, kontrolą człowieka i eskalacją." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0b1220;
-      --bg-card: #121a2b;
-      --text: #e8eef8;
-      --muted: #9aabbc;
-      --accent: #3dd6c6;
-      --accent-2: #6ea8ff;
-      --line: rgba(232, 238, 248, 0.12);
-      --radius: 18px;
+      --bg: #0c0c0b;
+      --bg-band: #10100e;
+      --bg-card: #161614;
+      --bg-card-2: #1c1c19;
+      --text: #f5f4f0;
+      --muted: #9a9890;
+      --muted-2: #6e6c64;
+      --yellow: #e8d98a;
+      --yellow-hover: #f0e6a8;
+      --teal: #3dd6c6;
+      --line: rgba(245, 244, 240, 0.1);
+      --line-strong: rgba(245, 244, 240, 0.16);
+      --radius: 6px;
       --danger: #ff8a8a;
+      --ink: #0c0c0b;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: "DM Sans", system-ui, sans-serif;
-      background: radial-gradient(1200px 600px at 10% -10%, #1a2a4a 0%, transparent 55%),
-                  radial-gradient(900px 500px at 90% 0%, #12353a 0%, transparent 50%),
-                  var(--bg);
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      background: var(--bg);
       color: var(--text);
       line-height: 1.55;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
     }
-    a { color: inherit; }
-    .wrap { width: min(1080px, calc(100% - 2rem)); margin: 0 auto; }
-    header {
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1120px, calc(100% - 2.5rem)); margin: 0 auto; }
+
+    /* —— Nav —— */
+    .site-header {
+      position: sticky; top: 0; z-index: 40;
+      background: rgba(12, 12, 11, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .site-header .inner {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 1.25rem 0; border-bottom: 1px solid var(--line);
+      padding: 0.95rem 0; gap: 1rem;
     }
-    .brand { font-weight: 700; letter-spacing: 0.02em; font-size: 1.1rem; }
-    .nav-cta {
-      display: inline-flex; padding: 0.65rem 1rem; border-radius: 999px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #061018; font-weight: 600; text-decoration: none; font-size: 0.95rem;
+    .brand {
+      font-weight: 600; letter-spacing: -0.03em; font-size: 1.05rem;
     }
-    .hero { padding: 4.5rem 0 3rem; display: grid; gap: 2rem; }
-    @media (min-width: 860px) {
-      .hero { grid-template-columns: 1.25fr 0.85fr; align-items: end; }
+    .nav-links {
+      display: flex; align-items: center; gap: 0.5rem 1.25rem; flex-wrap: wrap;
     }
-    .eyebrow {
-      display: inline-flex; padding: 0.35rem 0.75rem; border: 1px solid var(--line);
-      border-radius: 999px; color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem;
-      background: rgba(255,255,255,0.03);
+    .nav-links a.text-link {
+      color: var(--muted); font-size: 0.9rem; font-weight: 450;
     }
-    h1 {
-      font-family: "Instrument Serif", Georgia, serif; font-weight: 400;
-      font-size: clamp(2.2rem, 5vw, 3.5rem); line-height: 1.12; margin: 0 0 1rem;
-      letter-spacing: -0.02em;
-    }
-    .lede { font-size: 1.15rem; color: var(--muted); max-width: 40rem; margin: 0 0 1.75rem; }
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .nav-links a.text-link:hover { color: var(--text); }
     .btn-primary, button.btn-primary {
       display: inline-flex; align-items: center; justify-content: center;
-      padding: 0.9rem 1.25rem; border-radius: 12px; border: none; cursor: pointer;
-      background: linear-gradient(135deg, var(--accent), #2bb8a9);
-      color: #061018; font-weight: 700; text-decoration: none; font: inherit;
+      padding: 0.7rem 1.1rem; border-radius: var(--radius); border: none; cursor: pointer;
+      background: var(--yellow); color: var(--ink); font-weight: 600;
+      text-decoration: none; font: inherit; font-size: 0.92rem;
+      transition: background 0.15s ease;
     }
+    .btn-primary:hover, button.btn-primary:hover { background: var(--yellow-hover); }
     .btn-primary:disabled { opacity: 0.6; cursor: wait; }
     .btn-ghost {
-      display: inline-flex; padding: 0.9rem 1.25rem; border-radius: 12px;
-      border: 1px solid var(--line); text-decoration: none; color: var(--text);
-      background: rgba(255,255,255,0.03);
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.7rem 1.1rem; border-radius: var(--radius);
+      border: 1px solid var(--line-strong); text-decoration: none; color: var(--text);
+      background: transparent; font-size: 0.92rem; font-weight: 500;
     }
-    .panel {
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-      border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem;
+    .btn-ghost:hover { border-color: rgba(245,244,240,0.3); background: rgba(255,255,255,0.03); }
+    .nav-cta { padding: 0.55rem 0.95rem; font-size: 0.88rem; }
+
+    /* —— Hero —— */
+    .hero {
+      padding: 5.5rem 0 2rem;
+      display: grid; gap: 2.5rem 3.5rem;
     }
-    .panel h2 { margin: 0 0 0.75rem; font-size: 1.05rem; }
-    .panel p { margin: 0; color: var(--muted); }
-    .panel .who { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: 0.95rem; }
-    section { padding: 2.25rem 0; }
-    .section-title {
-      font-family: "Instrument Serif", Georgia, serif;
-      font-size: clamp(1.8rem, 3vw, 2.4rem); margin: 0 0 0.5rem; font-weight: 400;
+    @media (min-width: 900px) {
+      .hero {
+        grid-template-columns: 1.35fr 0.9fr;
+        align-items: end;
+        padding: 7rem 0 2.5rem;
+      }
     }
-    .section-sub { color: var(--muted); margin: 0 0 1.25rem; max-width: 40rem; }
-    .grid { display: grid; gap: 1rem; }
+    .eyebrow {
+      display: inline-block; color: var(--muted); font-size: 0.82rem;
+      letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500;
+      margin-bottom: 1.35rem;
+    }
+    h1 {
+      font-weight: 300; letter-spacing: -0.045em;
+      font-size: clamp(2.6rem, 6.2vw, 4.75rem);
+      line-height: 1.05; margin: 0;
+      max-width: 14ch;
+    }
+    .hero-right { display: flex; flex-direction: column; gap: 1.5rem; padding-bottom: 0.35rem; }
+    .lede {
+      font-size: 1.05rem; color: var(--muted); margin: 0;
+      max-width: 32rem; line-height: 1.65;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; }
+
+    /* —— Mock UI —— */
+    .mock-wrap {
+      position: relative; margin: 2.5rem 0 0; padding-bottom: 1rem;
+    }
+    .mock-fade {
+      position: absolute; inset: auto 0 0 0; height: 42%;
+      background: linear-gradient(to top, var(--bg) 10%, transparent);
+      pointer-events: none; z-index: 2;
+    }
+    .mock {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.45);
+      filter: blur(0.2px);
+      opacity: 0.92;
+    }
+    .mock-bar {
+      display: flex; align-items: center; gap: 0.45rem;
+      padding: 0.75rem 1rem; border-bottom: 1px solid var(--line);
+      background: var(--bg-band);
+    }
+    .mock-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted-2); }
+    .mock-bar span { color: var(--muted-2); font-size: 0.78rem; margin-left: 0.5rem; }
+    .mock-body { padding: 1.15rem 1.2rem 1.6rem; display: grid; gap: 0.85rem; }
     @media (min-width: 700px) {
-      .grid.roles { grid-template-columns: repeat(2, 1fr); }
-      .grid.steps { grid-template-columns: repeat(5, 1fr); }
+      .mock-body { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .mock-card {
+      background: var(--bg-card-2); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 1rem 1.05rem; min-height: 7.5rem;
+    }
+    .mock-card .role { font-size: 0.78rem; color: var(--teal); font-weight: 600; margin-bottom: 0.35rem; }
+    .mock-card h4 { margin: 0 0 0.5rem; font-size: 0.98rem; font-weight: 500; letter-spacing: -0.02em; }
+    .mock-status {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; color: var(--muted);
+    }
+    .mock-status i {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--teal);
+      display: inline-block;
+    }
+    .mock-status.idle i { background: var(--yellow); }
+    .mock-status.wait i { background: var(--muted-2); }
+    .mock-meta { margin-top: 0.65rem; font-size: 0.72rem; color: var(--muted-2); }
+
+    /* —— Sections —— */
+    section { padding: 4.5rem 0; }
+    .band { background: var(--bg-band); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .band .wrap { padding-top: 0; padding-bottom: 0; }
+    .section-label {
+      color: var(--muted-2); font-size: 0.78rem; letter-spacing: 0.08em;
+      text-transform: uppercase; font-weight: 500; margin: 0 0 0.85rem;
+    }
+    .section-title {
+      font-weight: 300; letter-spacing: -0.035em;
+      font-size: clamp(1.85rem, 3.4vw, 2.75rem);
+      margin: 0 0 0.65rem; line-height: 1.15; max-width: 22ch;
+    }
+    .section-sub { color: var(--muted); margin: 0 0 2.25rem; max-width: 38rem; font-size: 1.02rem; }
+
+    /* —— Stats —— */
+    .stats {
+      display: grid; gap: 1.5rem; padding: 3.5rem 0;
+    }
+    @media (min-width: 700px) {
+      .stats { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+    }
+    .stat {
+      border-left: 1px solid var(--line); padding-left: 1.15rem;
     }
     @media (max-width: 699px) {
-      .grid.steps { grid-template-columns: 1fr 1fr; }
+      .stat { border-left: none; border-top: 1px solid var(--line); padding: 1.1rem 0 0; }
+      .stats .stat:first-child { border-top: none; padding-top: 0; }
+    }
+    .stat .num {
+      font-size: clamp(1.7rem, 3vw, 2.35rem); font-weight: 300;
+      letter-spacing: -0.03em; margin: 0 0 0.35rem; color: var(--text);
+    }
+    .stat .label { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .stats-note {
+      grid-column: 1 / -1; margin: 0.5rem 0 0;
+      color: var(--muted-2); font-size: 0.8rem;
+    }
+
+    /* —— Pillars —— */
+    .pillars { display: grid; gap: 1rem; }
+    @media (min-width: 700px) { .pillars { grid-template-columns: repeat(3, 1fr); gap: 1.15rem; } }
+    .pillar {
+      border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 1.6rem 1.45rem; background: transparent;
+      min-height: 10rem;
+    }
+    .pillar .idx { color: var(--teal); font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+    .pillar h3 { margin: 0 0 0.55rem; font-size: 1.15rem; font-weight: 500; letter-spacing: -0.02em; }
+    .pillar p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+    /* —— Roles —— */
+    .grid.roles { display: grid; gap: 0; border-top: 1px solid var(--line); }
+    @media (min-width: 700px) {
+      .grid.roles { grid-template-columns: repeat(2, 1fr); }
     }
     .card {
-      background: var(--bg-card); border: 1px solid var(--line);
-      border-radius: var(--radius); padding: 1.25rem 1.35rem;
+      background: transparent; border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line); padding: 1.75rem 1.5rem;
     }
-    .card .num { color: var(--accent); font-weight: 700; font-size: 0.85rem; margin-bottom: 0.4rem; }
-    .card h3 { margin: 0 0 0.45rem; font-size: 1.05rem; }
+    @media (min-width: 700px) {
+      .card:nth-child(2n) { border-right: none; }
+    }
+    @media (max-width: 699px) {
+      .card { border-right: none; }
+    }
+    .card .num { color: var(--teal); font-weight: 600; font-size: 0.82rem; margin-bottom: 0.65rem; letter-spacing: 0.04em; }
+    .card h3 { margin: 0 0 0.45rem; font-size: 1.2rem; font-weight: 500; letter-spacing: -0.02em; }
     .card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
-    .pillars { display: grid; gap: 1rem; }
-    @media (min-width: 700px) { .pillars { grid-template-columns: repeat(3, 1fr); } }
-    .pillar {
-      border: 1px solid var(--line); border-radius: var(--radius); padding: 1.2rem;
-      background: rgba(255,255,255,0.03);
+
+    /* —— Process —— */
+    .steps {
+      display: grid; gap: 0; border-top: 1px solid var(--line);
+      counter-reset: step;
     }
-    .pillar h3 { margin: 0 0 0.4rem; font-size: 1rem; }
-    .pillar p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+    @media (min-width: 900px) {
+      .steps { grid-template-columns: repeat(5, 1fr); }
+    }
+    @media (min-width: 560px) and (max-width: 899px) {
+      .steps { grid-template-columns: repeat(3, 1fr); }
+    }
+    .step {
+      padding: 1.5rem 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--line); border-right: 1px solid var(--line);
+    }
+    @media (min-width: 900px) {
+      .step:last-child { border-right: none; }
+    }
+    .step .num {
+      color: var(--yellow); font-size: 0.8rem; font-weight: 600;
+      margin-bottom: 0.85rem; letter-spacing: 0.04em;
+    }
+    .step h3 { margin: 0 0 0.4rem; font-size: 1.05rem; font-weight: 500; letter-spacing: -0.02em; }
+    .step p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+    /* —— Checklist —— */
+    .checklist {
+      list-style: none; margin: 0; padding: 0;
+      display: grid; gap: 0; border-top: 1px solid var(--line);
+    }
+    .checklist li {
+      display: grid; grid-template-columns: 1.75rem 1fr; gap: 0.85rem;
+      padding: 1.15rem 0; border-bottom: 1px solid var(--line);
+      color: var(--text); font-size: 1.02rem; align-items: start;
+    }
+    .checklist .tick {
+      color: var(--yellow); font-weight: 500; line-height: 1.55;
+    }
+    .checklist span { color: var(--muted); }
+
+    /* —— Contact / form —— */
     .cta-band {
-      margin: 1rem 0 3rem; padding: 2rem;
-      border-radius: calc(var(--radius) + 4px); border: 1px solid var(--line);
-      background: linear-gradient(135deg, rgba(61,214,198,0.12), rgba(110,168,255,0.1)), var(--bg-card);
-      display: grid; gap: 1.5rem;
+      padding: 4.5rem 0 5rem;
+    }
+    .cta-grid {
+      display: grid; gap: 2.5rem;
     }
     @media (min-width: 860px) {
-      .cta-band { grid-template-columns: 0.95fr 1.05fr; align-items: start; }
+      .cta-grid { grid-template-columns: 0.85fr 1.15fr; gap: 3.5rem; align-items: start; }
     }
     .cta-band h2 {
-      margin: 0 0 0.4rem; font-family: "Instrument Serif", Georgia, serif;
-      font-weight: 400; font-size: 1.9rem;
+      margin: 0 0 0.75rem; font-weight: 300; letter-spacing: -0.035em;
+      font-size: clamp(1.85rem, 3.2vw, 2.6rem); line-height: 1.15;
     }
-    .cta-band > div > p { margin: 0; color: var(--muted); }
-    form.lead-form { display: grid; gap: 0.85rem; }
+    .cta-band > .cta-grid > div > p { margin: 0; color: var(--muted); max-width: 28rem; }
+    form.lead-form {
+      display: grid; gap: 0.9rem;
+      border: 1px solid var(--line); border-radius: 8px;
+      padding: 1.5rem 1.4rem; background: var(--bg-card);
+    }
     .field { display: grid; gap: 0.35rem; }
-    .field label { font-size: 0.88rem; color: var(--muted); }
+    .field label { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
     .field input, .field select, .field textarea {
-      width: 100%; padding: 0.75rem 0.85rem; border-radius: 10px;
-      border: 1px solid var(--line); background: rgba(6,16,24,0.55);
+      width: 100%; padding: 0.72rem 0.85rem; border-radius: var(--radius);
+      border: 1px solid var(--line); background: var(--bg);
       color: var(--text); font: inherit;
     }
     .field input:focus, .field select:focus, .field textarea:focus {
-      outline: 2px solid rgba(61,214,198,0.45); border-color: transparent;
+      outline: 2px solid rgba(232, 217, 138, 0.4); border-color: transparent;
     }
     .field textarea { min-height: 110px; resize: vertical; }
+    .field select option { background: var(--bg-card); }
     .row2 { display: grid; gap: 0.85rem; }
     @media (min-width: 560px) { .row2 { grid-template-columns: 1fr 1fr; } }
     .hp { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; overflow: hidden; }
-    .form-status { margin: 0; font-size: 0.92rem; min-height: 1.3em; }
-    .form-status.ok { color: var(--accent); }
+    .form-status { margin: 0; font-size: 0.9rem; min-height: 1.3em; }
+    .form-status.ok { color: var(--teal); }
     .form-status.err { color: var(--danger); }
+
+    /* —— Footer —— */
     footer {
-      border-top: 1px solid var(--line); padding: 1.5rem 0 2.5rem; color: var(--muted);
-      font-size: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem;
+      border-top: 1px solid var(--line); padding: 3rem 0 2.5rem;
+      color: var(--muted); font-size: 0.9rem;
+    }
+    .footer-word {
+      font-size: clamp(2.5rem, 10vw, 6.5rem); font-weight: 300;
+      letter-spacing: -0.05em; color: var(--text); opacity: 0.12;
+      line-height: 1; margin: 0 0 1.5rem; user-select: none;
+    }
+    .footer-row {
+      display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem;
       justify-content: space-between;
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
+  <header class="site-header">
+    <div class="wrap inner">
       <div class="brand">getStanley</div>
-      <a class="nav-cta" href="#kontakt" data-lead-type="bot_team">Zgłoś wdrożenie zespołu botów</a>
-    </header>
+      <nav class="nav-links" aria-label="Główne">
+        <a class="text-link" href="#role">Role</a>
+        <a class="text-link" href="#kontakt">Kontakt</a>
+        <a class="btn-primary nav-cta" href="#kontakt" data-lead-type="bot_team">Zgłoś wdrożenie zespołu botów</a>
+      </nav>
+    </div>
+  </header>
 
-    <main>
+  <main>
+    <div class="wrap">
       <section class="hero">
         <div>
           <div class="eyebrow">Trening i wdrożenie botów-pracowników AI</div>
           <h1>Powtarzalną pracę przejmują boty. Decyzje wysokiego ryzyka zostają u Was.</h1>
+        </div>
+        <div class="hero-right">
           <p class="lede">getStanley trenuje i wdraża małe, nazwane role botów pod standard Waszej firmy — w narzędziach, z których już korzystacie. Zakres i reguły są ustalane z góry; wysyłki, płatności i inne działania nieodwracalne wymagają zatwierdzenia człowieka.</p>
           <div class="hero-actions">
             <a class="btn-primary" href="#kontakt" data-lead-type="bot_team">Zgłoś wdrożenie zespołu botów</a>
             <a class="btn-ghost" href="#kontakt" data-lead-type="workflow_call">Umów rozmowę o pierwszym workflow</a>
           </div>
         </div>
-        <aside class="panel">
-          <h2>Dla kogo</h2>
-          <p>Dla właścicieli firm oraz osób odpowiedzialnych za operacje, które chcą usystematyzować procesy pochłaniające czas zespołu — bez przekazywania botom decyzji strategicznych ani działań o wysokim ryzyku.</p>
-          <div class="who"><strong>Typowy start wdrożenia:</strong> 2–3 boty na jeden workflow; uruchomienie w około 1–2 tygodnie.</div>
-        </aside>
       </section>
 
+      <div class="mock-wrap" aria-hidden="true">
+        <div class="mock">
+          <div class="mock-bar">
+            <span class="mock-dot"></span>
+            <span class="mock-dot"></span>
+            <span class="mock-dot"></span>
+            <span>getstanley / zespół / live</span>
+          </div>
+          <div class="mock-body">
+            <div class="mock-card">
+              <div class="role">01 · Rola</div>
+              <h4>Web designer</h4>
+              <div class="mock-status"><i></i> W toku — layout</div>
+              <div class="mock-meta">Ostatni check-in · 12 min</div>
+            </div>
+            <div class="mock-card">
+              <div class="role">03 · Rola</div>
+              <h4>Software PM</h4>
+              <div class="mock-status idle"><i></i> Czeka na zatwierdzenie</div>
+              <div class="mock-meta">Ticket flow · 3 otwarte</div>
+            </div>
+            <div class="mock-card">
+              <div class="role">04 · Rola</div>
+              <h4>Tester</h4>
+              <div class="mock-status wait"><i></i> Eskalacja do Was</div>
+              <div class="mock-meta">Regresja · raport gotowy</div>
+            </div>
+          </div>
+        </div>
+        <div class="mock-fade"></div>
+      </div>
+    </div>
+
+    <section class="band" aria-labelledby="stats-heading">
+      <div class="wrap">
+        <p class="section-label" id="stats-heading">Fakty oferty — nie obietnice ROI</p>
+        <div class="stats">
+          <div class="stat">
+            <p class="num">1–2 tyg.</p>
+            <p class="label">do live typowego startu</p>
+          </div>
+          <div class="stat">
+            <p class="num">2–3 boty</p>
+            <p class="label">zwykle na pierwszy workflow</p>
+          </div>
+          <div class="stat">
+            <p class="num">4 role</p>
+            <p class="label">w aktualnym katalogu</p>
+          </div>
+          <div class="stat">
+            <p class="num">Zawsze</p>
+            <p class="label">human-in-the-loop przy ryzyku</p>
+          </div>
+          <p class="stats-note">Liczby z oferty getStanley — zakres i tempo ustalamy po rozmowie o Waszym workflow.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
       <section>
+        <p class="section-label">Kontrola</p>
         <h2 class="section-title">Jak zapewniamy kontrolę</h2>
         <p class="section-sub">Model wdrożenia oparty na regułach, zatwierdzeniach człowieka i eskalacji przy niepewności lub ryzyku.</p>
         <div class="pillars">
           <div class="pillar">
+            <div class="idx">01</div>
             <h3>Jasne zasady</h3>
             <p>Każdy bot ma określoną rolę, zakres uprawnień i reguły działania — bez nieprzejrzystej „czarnej skrzynki”.</p>
           </div>
           <div class="pillar">
+            <div class="idx">02</div>
             <h3>Kontrola człowieka</h3>
             <p>Wysyłki, płatności i inne działania nieodwracalne wymagają Waszego zatwierdzenia.</p>
           </div>
           <div class="pillar">
+            <div class="idx">03</div>
             <h3>Eskalacja</h3>
             <p>Gdy bot nie ma wystarczającej pewności, przekazuje sprawę człowiekowi zamiast działać na domysłach.</p>
           </div>
@@ -191,6 +432,7 @@
       </section>
 
       <section id="role">
+        <p class="section-label">Katalog</p>
         <h2 class="section-title">Dostępne role botów</h2>
         <p class="section-sub">Aktualny katalog ról — stopniowo rozszerzany.</p>
         <div class="grid roles">
@@ -218,72 +460,97 @@
       </section>
 
       <section>
+        <p class="section-label">Proces</p>
         <h2 class="section-title">Przebieg współpracy</h2>
         <p class="section-sub">Od uzgodnienia zakresu do przekazania działającego workflow — z eskalacją i nadzorem jakości.</p>
-        <div class="grid steps">
-          <article class="card"><div class="num">1</div><h3>Zakres</h3><p>Ustalenie procesów do przejęcia.</p></article>
-          <article class="card"><div class="num">2</div><h3>Role</h3><p>Definicja małych, nazwanych botów.</p></article>
-          <article class="card"><div class="num">3</div><h3>Trening</h3><p>Dopasowanie do Waszego standardu pracy.</p></article>
-          <article class="card"><div class="num">4</div><h3>Wdrożenie</h3><p>Integracja z Waszymi narzędziami.</p></article>
-          <article class="card"><div class="num">5</div><h3>Przekazanie</h3><p>Eskalacja, zatwierdzenia i nadzór jakości.</p></article>
+        <div class="steps">
+          <article class="step"><div class="num">01</div><h3>Zakres</h3><p>Ustalenie procesów do przejęcia.</p></article>
+          <article class="step"><div class="num">02</div><h3>Role</h3><p>Definicja małych, nazwanych botów.</p></article>
+          <article class="step"><div class="num">03</div><h3>Trening</h3><p>Dopasowanie do Waszego standardu pracy.</p></article>
+          <article class="step"><div class="num">04</div><h3>Wdrożenie</h3><p>Integracja z Waszymi narzędziami.</p></article>
+          <article class="step"><div class="num">05</div><h3>Przekazanie</h3><p>Eskalacja, zatwierdzenia i nadzór jakości.</p></article>
         </div>
       </section>
 
-      <section class="cta-band" id="kontakt">
-        <div>
-          <h2>Omówcie pierwszy workflow</h2>
-          <p>Wypełnijcie formularz. Zgłoszenie trafia do pipeline sprzedaży getStanley — odpowiadamy w ciągu 1–2 dni roboczych.</p>
-        </div>
-        <form class="lead-form" id="lead-form" novalidate>
-          <div class="field">
-            <label for="lead_type">Cel zgłoszenia</label>
-            <select id="lead_type" name="lead_type" required>
-              <option value="bot_team">Zgłosić wdrożenie zespołu botów</option>
-              <option value="workflow_call">Umówić rozmowę o pierwszym workflow</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="name">Imię i nazwisko</label>
-            <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" />
-          </div>
-          <div class="field">
-            <label for="email">E-mail służbowy</label>
-            <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" />
-          </div>
-          <div class="field">
-            <label for="company">Firma / organizacja</label>
-            <input id="company" name="company" type="text" autocomplete="organization" required maxlength="160" />
-          </div>
-          <div class="row2">
-            <div class="field">
-              <label for="phone">Telefon <span style="opacity:.7">(opcjonalnie)</span></label>
-              <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40" />
-            </div>
-            <div class="field">
-              <label for="website">Strona WWW <span style="opacity:.7">(opcjonalnie)</span></label>
-              <input id="website" name="website" type="url" autocomplete="url" maxlength="200" placeholder="https://" />
-            </div>
-          </div>
-          <div class="field" id="preferred_time_wrap" hidden>
-            <label for="preferred_time">Kiedy rozmawiamy? <span style="opacity:.7">(opcjonalnie)</span></label>
-            <input id="preferred_time" name="preferred_time" type="text" maxlength="160" placeholder="np. wtorek–czwartek po 14:00" />
-          </div>
-          <div class="field">
-            <label for="message">Wiadomość</label>
-            <textarea id="message" name="message" required maxlength="2000" placeholder="Jakie procesy lub role botów chcecie wdrożyć?"></textarea>
-          </div>
-          <input class="hp" type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
-          <button class="btn-primary" type="submit" id="lead-submit">Wyślij zgłoszenie</button>
-          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
-        </form>
+      <section>
+        <p class="section-label">Przed startem</p>
+        <h2 class="section-title">Co ustalacie przed startem</h2>
+        <p class="section-sub">Bez obiecanek ROI — konkretny zakres, zanim bot ruszy w Waszych narzędziach.</p>
+        <ul class="checklist">
+          <li><span class="tick">✓</span><span>Mapa jednego workflow i lista decyzji, które zostają po Waszej stronie</span></li>
+          <li><span class="tick">✓</span><span>Nazwane role botów z zakresem i regułami działania</span></li>
+          <li><span class="tick">✓</span><span>Punkty eskalacji: kiedy bot pyta zamiast działać na domysłach</span></li>
+          <li><span class="tick">✓</span><span>Plan integracji z narzędziami, z których już korzystacie</span></li>
+          <li><span class="tick">✓</span><span>Kryteria ukończenia oraz check-iny jakości po przekazaniu</span></li>
+        </ul>
       </section>
-    </main>
+    </div>
 
-    <footer>
-      <div>© <span id="y"></span> getStanley</div>
-      <div>Kontakt: formularz powyżej</div>
-    </footer>
-  </div>
+    <section class="band cta-band" id="kontakt">
+      <div class="wrap">
+        <div class="cta-grid">
+          <div>
+            <p class="section-label">Kontakt</p>
+            <h2>Omówcie pierwszy workflow</h2>
+            <p>Wypełnijcie formularz. Zgłoszenie trafia do pipeline sprzedaży getStanley — odpowiadamy w ciągu 1–2 dni roboczych.</p>
+          </div>
+          <form class="lead-form" id="lead-form" novalidate>
+            <div class="field">
+              <label for="lead_type">Cel zgłoszenia</label>
+              <select id="lead_type" name="lead_type" required>
+                <option value="bot_team">Zgłosić wdrożenie zespołu botów</option>
+                <option value="workflow_call">Umówić rozmowę o pierwszym workflow</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="name">Imię i nazwisko</label>
+              <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="email">E-mail służbowy</label>
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" />
+            </div>
+            <div class="field">
+              <label for="company">Firma / organizacja</label>
+              <input id="company" name="company" type="text" autocomplete="organization" required maxlength="160" />
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="phone">Telefon <span style="opacity:.7">(opcjonalnie)</span></label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40" />
+              </div>
+              <div class="field">
+                <label for="website">Strona WWW <span style="opacity:.7">(opcjonalnie)</span></label>
+                <input id="website" name="website" type="url" autocomplete="url" maxlength="200" placeholder="https://" />
+              </div>
+            </div>
+            <div class="field" id="preferred_time_wrap" hidden>
+              <label for="preferred_time">Kiedy rozmawiamy? <span style="opacity:.7">(opcjonalnie)</span></label>
+              <input id="preferred_time" name="preferred_time" type="text" maxlength="160" placeholder="np. wtorek–czwartek po 14:00" />
+            </div>
+            <div class="field">
+              <label for="message">Wiadomość</label>
+              <textarea id="message" name="message" required maxlength="2000" placeholder="Jakie procesy lub role botów chcecie wdrożyć?"></textarea>
+            </div>
+            <input class="hp" type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <button class="btn-primary" type="submit" id="lead-submit">Wyślij zgłoszenie</button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p class="footer-word" aria-hidden="true">getStanley</p>
+      <div class="footer-row">
+        <div>© <span id="y"></span> getStanley</div>
+        <div>Leady: formularz powyżej</div>
+      </div>
+    </div>
+  </footer>
+
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
 
@@ -333,13 +600,13 @@
       const leadType = form.lead_type.value;
 
       if (!name || !email || !company || !message) {
-        statusEl.textContent = "Uzupełnij imię i nazwisko, e-mail, firmę oraz wiadomość.";
+        statusEl.textContent = "Uzupełnijcie imię, e-mail, firmę i wiadomość.";
         statusEl.classList.add("err");
         return;
       }
 
       if (form.hp.value) {
-        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Odezwiemy się w ciągu 1–2 dni roboczych.";
+        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Odpowiemy w ciągu 1–2 dni roboczych.";
         statusEl.classList.add("ok");
         form.reset();
         syncLeadTypeUI();
@@ -351,7 +618,7 @@
       const preferredTime = leadType === "workflow_call" ? form.preferred_time.value.trim() : "";
       const pageUrl = window.location.href.split("#")[0];
       const submittedAt = new Date().toISOString();
-      const ctaLabel = leadType === "bot_team" ? "Zgłoś wdrożenie zespołu botów" : "Umów rozmowę o pierwszym workflow";
+      const ctaLabel = leadType === "bot_team" ? "Zgłoś wdrożenie zespołu botów" : "Umów rozmowę";
       const bodyLines = [
         "Imię: " + name,
         "Email: " + email,
@@ -379,7 +646,7 @@
         _replyto: email,
         _template: "box",
         _captcha: "false",
-        _autoresponse: "Dziękujemy — getStanley otrzymał Wasze zgłoszenie. Odezwiemy się w ciągu 1–2 dni roboczych. Oferta: https://stanleyagent.github.io/"
+        _autoresponse: "Dziękujemy — getStanley otrzymał Wasze zgłoszenie. Odpowiemy w ciągu 1–2 dni roboczych. Oferta: https://stanleyagent.github.io/"
       };
 
       submitBtn.disabled = true;
@@ -399,10 +666,10 @@
         if (!res.ok || (data && data.success === "false")) throw new Error("bad status");
         form.reset();
         syncLeadTypeUI();
-        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Odezwiemy się w ciągu 1–2 dni roboczych.";
+        statusEl.textContent = "Dziękujemy — zgłoszenie trafiło do getStanley. Odpowiemy w ciągu 1–2 dni roboczych.";
         statusEl.classList.add("ok");
       } catch (err) {
-        statusEl.textContent = "Nie udało się wysłać zgłoszenia. Spróbuj ponownie za chwilę.";
+        statusEl.textContent = "Nie udało się wysłać. Spróbujcie ponownie za chwilę.";
         statusEl.classList.add("err");
       } finally {
         submitBtn.disabled = false;
